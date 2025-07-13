@@ -41,24 +41,18 @@ DESCRIPTION = 'Your site description for SEO and social sharing'
 DISPLAY_CATEGORIES_ON_MENU = True  # Show categories in navigation
 DISPLAY_PAGES_ON_MENU = True       # Show pages in navigation
 
-# Optional: Customize category display names and JSON-LD types
+# Content section configuration
 CATEGORY_DISPLAY_CONFIG = {
     'work': {
         'display': 'Presentations',
-        'jsonld_type': 'Event',
-        'url': 'work',
         'group_by_category': True  # Group items by category (for portfolios)
     },
     'blog': {
         'display': 'Blog',
-        'jsonld_type': 'BlogPosting',
-        'url': 'blog',
         'group_by_category': False  # List chronologically (for blogs)
     },
     'projects': {
         'display': 'Projects',
-        'jsonld_type': 'CreativeWork',
-        'url': 'projects',
         'group_by_category': True
     }
 }
@@ -76,15 +70,7 @@ SOCIAL = (
 The `CATEGORY_DISPLAY_CONFIG` setting allows you to customize how content categories are displayed:
 
 - **display**: The display name shown in navigation and page titles
-- **jsonld_type**: The JSON-LD schema type for SEO (e.g., "BlogPosting", "Event", "CreativeWork")
-- **url**: The URL path for the category page
 - **group_by_category**: Whether to group content by category (True) or list chronologically (False)
-
-**Common JSON-LD types:**
-- `BlogPosting` - For blog posts and articles
-- `Event` - For presentations, talks, workshops
-- `CreativeWork` - For projects, portfolios, case studies
-- `Article` - General articles and content
 
 **Navigation Behavior:**
 - If `DISPLAY_CATEGORIES_ON_MENU = True`, categories will appear in navigation using the display names from `CATEGORY_DISPLAY_CONFIG`

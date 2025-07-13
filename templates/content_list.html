@@ -5,25 +5,9 @@
 {% set section_name = page.section_name | default("work") %}
 {% set current_config = section_config.get(section_name, {}) %}
 {% set display_name = current_config.get('display', (section_name | capitalize)) %}
-{% set jsonld_type = current_config.get('jsonld_type', 'CreativeWork') %}
 {% set group_by_category = current_config.get('group_by_category', false) %}
 
 <h2>{{ display_name }}</h2>
-
-<!-- JSON-LD Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "{{ display_name }}",
-  "description": "{{ display_name }} by {{ AUTHOR }}",
-  "author": {
-    "@type": "Person",
-    "name": "{{ AUTHOR }}"
-  },
-  "url": "{{ SITEURL }}/{{ current_config.get('url', section_name) }}/"
-}
-</script>
 
 {% if group_by_category %}
     <!-- Content grouped by category (typically for work/portfolio) -->
