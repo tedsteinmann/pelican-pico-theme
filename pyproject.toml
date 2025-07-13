@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pelican-pico-theme"
+version = "1.0.0"
+description = "A modern, responsive Pelican theme built with Pico CSS"
+authors = [
+    { name = "Ted Steinmann" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+keywords = ["pelican", "theme", "pico", "css", "responsive", "portfolio"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+
+[project.urls]
+Homepage = "https://github.com/tedsteinmann/pelican-pico-theme"
+Repository = "https://github.com/tedsteinmann/pelican-pico-theme"
+Issues = "https://github.com/tedsteinmann/pelican-pico-theme/issues"
+Documentation = "https://github.com/tedsteinmann/pelican-pico-theme#readme"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"*" = ["templates/*", "static/**/*"]

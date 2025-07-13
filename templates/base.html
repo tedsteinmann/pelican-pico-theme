@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ DEFAULT_LANG }}">
+<head>
+    {% block head %}
+    <title>{% if article %}{{ article.title }} | {% elif page %}{{ page.title }} | {% endif %} {{ AUTHOR }}</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Pelican" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="{{ AUTHOR }}" />
+    <meta name="description" content="{{ DESCRIPTION }}" />
+
+    {% if SITESUBTITLE %}
+      <meta name="description" content="{{ SITESUBTITLE }}" />
+    {% endif %}
+    <link rel="stylesheet" href="/theme/css/pico.min.css" media="print" onload="this.media='all'">
+    <link rel="icon" type="image/png" href="/theme/images/favicon.ico">
+
+    <link rel="stylesheet" href="/theme/css/style.css">
+    {% endblock head %}
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <!-- Content -->
+    <main>
+        <section id="index">
+            <div class="container">
+                <h2>{{ title }}</h2>
+                {% block content %}{% endblock %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

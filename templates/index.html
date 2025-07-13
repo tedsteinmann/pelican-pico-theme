@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{{ SITENAME }}
+
+{% block content %}
+{% set about_page = pages | selectattr("title", "equalto", "About") | first %}
+    <!-- Grid Layout -->
+    <div class="grid">
+        <!-- Text Content -->
+        <div>
+            <h1><strong>{{ AUTHOR }}</strong></h1>
+            <h2 class="secondary">Portfolio</h2>
+            <p>
+                {{ about_page.summary }}
+            </p>
+
+            <!-- Social Media Buttons -->
+            <div class="flex gap-2 mt-1">
+                {% for name, url in SOCIAL %}
+                    {% set button_class = "secondary" %}
+                    {% if name == "LinkedIn" %}
+                        {% set button_class = "primary" %}
+                    {% elif name == "Facebook" %}
+                        {% set button_class = "primary" %}
+                    {% elif name == "Twitter" or name == "X" %}
+                        {% set button_class = "contrast" %}
+                    {% elif name == "Github" %}
+                        {% set button_class = "secondary" %}
+                    {% endif %}
+                    <a href="{{ url }}" role="button" class="{{ button_class }}" target="_blank">{{ name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Image Content -->
+        <div style="min-height: 1047px; display: flex; align-items: flex-end;">
+            <img src="static/{{ about_page.image }}" 
+                 srcset="
+                   static/{{ about_page.image | replace('.webp', '-300.webp') }} 300w,
+                   static/{{ about_page.image | replace('.webp', '-600.webp') }} 600w
+                 "
+                 sizes="(max-width: 300px) 300px, 
+                        (max-width: 600px) 600px, 
+                        600px"
+                 decoding="async" 
+                 alt="Illustration of {{ AUTHOR }}" 
+                 class="radius responsive-image" 
+                 fetchpriority="high" 
+                 width="785" 
+                 height="1047"
+                 title="Portrait of {{ AUTHOR }}"
+                 style="display: block; max-width: 100%; height: auto; aspect-ratio: 785/1047;">
+        </div>
+    </div>
+{% endblock %}

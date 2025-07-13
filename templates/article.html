@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITENAME|striptags }} - {{ article.title|striptags  }}{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <meta property="og:title" content="{{ article.title }}">
+  <meta property="og:url" content="{{ SITEURL }}/{{ article.url }}">
+  {% if article.jsonld_link %}
+  <link rel="alternate" type="application/ld+json" href="{{ article.jsonld_link }}">
+  {% endif %}
+
+  {% if article.description %}
+    <meta name="description" content="{{article.description}}" />
+    <meta property="og:description" content="{{ article.summary }}">
+  {% endif %}
+
+  {% if article.keywords %}
+    <meta name="keywords" content="{{article.keywords}}" />
+  {% endif %}
+
+  {% if article.summary %}
+  <meta name="summary" content="{{article.summary}}" />
+  {% endif %}
+
+  {% for name, url in SOCIAL %}
+    {% if name == "Twitter" %}
+      <meta name="twitter:creator" content="@{{ HANDLE }}">
+    {% endif %}
+  {% endfor %}
+
+
+<!--<meta property="og:image" content="{{ SITEURL }}/images/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">-->
+
+{% endblock %}
+
+{% block content %}
+<article>
+    <h2>{{ article.title|safe }}</h2>
+    <p><small>{{ article.date.strftime("%B %d, %Y") }}</small></p>
+
+    {% if article.authors %}
+    <address>
+      By {% for author in article.authors %}
+        <a href="{{ author.url }}">{{ author }}</a>
+      {% endfor %}
+    </address>
+    {% endif %}
+
+    {{ article.content|safe }}
+
+    {% if article.media %}
+      {% set media_extension = article.media.split('.')[-1] %} <!-- Extract file extension -->
+      {% if media_extension == 'pdf' %}
+          <iframe src="/static/media/{{ article.media }}"
+                  width="100%" height="800px"
+                  title="PDF preview of {{ article.title }}"
+                  style="border: none;"></iframe>
+      {% else %}
+          <!-- Handle other media types here -->
+          <p>Media file is not a PDF: {{ article.media }}</p>
+      {% endif %}
+    {% endif %}
+    <hr>
+    {% if article.category %}
+    <p>
+      Categories: <a href="/{{ article.category.url }}">{{ article.category }}</a>
+    </p>
+    {% endif %}
+    
+    {% if article.tags %}
+    <p>
+      Tags:
+      {% for tag in article.tags %}
+        <a href="/{{ tag.url }}">{{ tag }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+    {% endif %}
+</article>
+{% endblock %}

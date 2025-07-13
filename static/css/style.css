@@ -1,0 +1,15 @@
+/* Main custom styles for ted.steinmann.me */
+
+/* Remove text decoration from all links */
+a {
+    text-decoration: none;
+}
+
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+}
+
+h1 {
+    font-size: 2rem; /* Adjust the size as needed */
+}

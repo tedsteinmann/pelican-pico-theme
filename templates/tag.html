@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+<h2>Tag: {{ tag }}</h2>
+
+{% block content %}
+    <ul style="list-style: none; padding: 0;">
+    {% for article in articles if tag in article.tags %}
+        {% include "article_item.html" %}
+    {% endfor %}
+    </ul>
+{% endblock %}
