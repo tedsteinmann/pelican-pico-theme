@@ -29,6 +29,37 @@
     {% endif %}
   {% endfor %}
 
+  <!-- JSON-LD Structured Data -->
+  {% set section_config = CATEGORY_DISPLAY_CONFIG | default({}) %}
+  {% set article_config = None %}
+  {% if article.relative_source_path.startswith("work/") %}
+    {% set article_config = section_config.get('work', {}) %}
+  {% elif article.relative_source_path.startswith("blog/") %}
+    {% set article_config = section_config.get('blog', {}) %}
+  {% endif %}
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "{{ article_config.get('jsonld_type', 'Article') if article_config else 'Article' }}",
+    "headline": "{{ article.title }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ AUTHOR }}"
+    },
+    "datePublished": "{{ article.date.isoformat() }}",
+    {% if article.modified %}
+    "dateModified": "{{ article.modified.isoformat() }}",
+    {% endif %}
+    "description": "{{ article.summary | striptags | safe }}",
+    "url": "{{ SITEURL }}/{{ article.url }}"
+    {% if article_config and article_config.get('jsonld_type') == 'Event' %}
+    ,
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode"
+    {% endif %}
+  }
+  </script>
 
 <!--<meta property="og:image" content="{{ SITEURL }}/images/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">-->

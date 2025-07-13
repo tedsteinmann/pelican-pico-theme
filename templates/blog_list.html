@@ -1,7 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Blog Posts</h2>
+{% set section_config = CATEGORY_DISPLAY_CONFIG | default({}) %}
+{% set blog_config = section_config.get('blog', {}) %}
+{% set display_name = blog_config.get('display', 'Blog Posts') %}
+{% set jsonld_type = blog_config.get('jsonld_type', 'BlogPosting') %}
+
+<h2>{{ display_name }}</h2>
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "{{ display_name }}",
+  "description": "{{ display_name }} by {{ AUTHOR }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ AUTHOR }}"
+  },
+  "url": "{{ SITEURL }}/{{ blog_config.get('url', 'blog') }}/"
+}
+</script>
+
 <ul style="list-style: none; padding: 0;">
 {% for article in articles|sort(attribute="date", reverse=True) %}
     {% if article.relative_source_path.startswith("blog/") %}

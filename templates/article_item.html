@@ -12,10 +12,10 @@
         <!-- Article Details -->
         <div>
             <h3>
-                <a href="/work/{{ article.slug }}" class="contrast">{{ article.title }}</a>
+                <a href="{{ article.url }}" class="contrast">{{ article.title }}</a>
             </h3>
             <strong>Category:</strong> 
-            <a href="/category/{{ article.category }}" class="secondary">{{ article.category }}</a>
+            <a href="{{ SITEURL }}/{{ article.category.url }}" class="secondary">{{ article.category }}</a>
             <br>
             <strong>Tags:</strong> 
             {% for tag in article.tags %}

@@ -37,9 +37,31 @@ THEME = 'themes/pico'
 HANDLE = 'yourusername'  # Social media handle
 DESCRIPTION = 'Your site description for SEO and social sharing'
 
-# Optional: Customize navigation
-DISPLAY_CATEGORIES_ON_MENU = False
-DISPLAY_PAGES_ON_MENU = True
+# Navigation settings
+DISPLAY_CATEGORIES_ON_MENU = True  # Show categories in navigation
+DISPLAY_PAGES_ON_MENU = True       # Show pages in navigation
+
+# Optional: Customize category display names and JSON-LD types
+CATEGORY_DISPLAY_CONFIG = {
+    'work': {
+        'display': 'Presentations',
+        'jsonld_type': 'Event',
+        'url': 'work',
+        'group_by_category': True  # Group items by category (for portfolios)
+    },
+    'blog': {
+        'display': 'Blog',
+        'jsonld_type': 'BlogPosting',
+        'url': 'blog',
+        'group_by_category': False  # List chronologically (for blogs)
+    },
+    'projects': {
+        'display': 'Projects',
+        'jsonld_type': 'CreativeWork',
+        'url': 'projects',
+        'group_by_category': True
+    }
+}
 
 # Social links (optional)
 SOCIAL = (
@@ -49,19 +71,60 @@ SOCIAL = (
 )
 ```
 
+### Category Display Configuration
+
+The `CATEGORY_DISPLAY_CONFIG` setting allows you to customize how content categories are displayed:
+
+- **display**: The display name shown in navigation and page titles
+- **jsonld_type**: The JSON-LD schema type for SEO (e.g., "BlogPosting", "Event", "CreativeWork")
+- **url**: The URL path for the category page
+- **group_by_category**: Whether to group content by category (True) or list chronologically (False)
+
+**Common JSON-LD types:**
+- `BlogPosting` - For blog posts and articles
+- `Event` - For presentations, talks, workshops
+- `CreativeWork` - For projects, portfolios, case studies
+- `Article` - General articles and content
+
+**Navigation Behavior:**
+- If `DISPLAY_CATEGORIES_ON_MENU = True`, categories will appear in navigation using the display names from `CATEGORY_DISPLAY_CONFIG`
+- If `DISPLAY_CATEGORIES_ON_MENU = False`, categories won't appear in navigation automatically
+
 ## Templates
 
 This theme includes the following templates:
 
 - `base.html` - Base template with common layout
 - `index.html` - Homepage template
-- `article.html` - Individual article/post template
+- `article.html` - Individual article/post template with JSON-LD structured data
 - `page.html` - Static page template
-- `blog_list.html` - Blog post listing
-- `work_list.html` - Portfolio work listing
+- `content_list.html` - Flexible content listing template for any content section (replaces blog_list.html and work_list.html)
 - `category.html` - Category archive
 - `tag.html` - Tag archive
 - `author.html` - Author archive
+
+### Content List Template
+
+The `content_list.html` template is a flexible template that can display any content section. To use it, create a page with the following metadata:
+
+```markdown
+---
+title: Your Section Title
+template: content_list
+section_name: your_section_name
+---
+```
+
+The `section_name` should match a key in your `CATEGORY_DISPLAY_CONFIG`. For example:
+
+- `section_name: blog` - Lists all content from the `blog/` folder
+- `section_name: work` - Lists all content from the `work/` folder  
+- `section_name: projects` - Lists all content from the `projects/` folder
+
+The template will automatically:
+- Use the display name from `CATEGORY_DISPLAY_CONFIG`
+- Apply the appropriate JSON-LD schema type for SEO
+- Group by category or list chronologically based on the `group_by_category` setting
 
 ## Customization
 
