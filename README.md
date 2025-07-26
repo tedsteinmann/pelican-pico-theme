@@ -8,9 +8,11 @@ A modern, responsive Pelican theme built with [Pico CSS](https://picocss.com/) -
 - **Responsive Design**: Mobile-first approach with clean layouts
 - **Semantic HTML**: Built with accessible, semantic markup
 - **Dark/Light Mode**: Automatic theme switching based on user preference
+- **Dynamic Navigation**: Automatically generates navigation from pages and article categories
 - **Portfolio Support**: Designed for showcasing work and projects
 - **Clean Typography**: Beautiful, readable fonts and spacing
 - **SEO Optimized**: Proper meta tags and structured data
+- **Category Organization**: Automatic category pages for organizing content
 
 ## Installation
 
@@ -33,104 +35,119 @@ Add the following to your `pelicanconf.py`:
 ```python
 THEME = 'themes/pico'
 
-# Theme-specific settings
-HANDLE = 'yourusername'  # Social media handle
+# Basic site settings
+AUTHOR = 'Your Name'
+SITENAME = 'Your Site Name'
 DESCRIPTION = 'Your site description for SEO and social sharing'
 
-# Simplified Navigation Configuration
+# Content paths
+PATH = 'content'                      # Your content directory
+PAGE_PATHS = ['']                     # Pages in content root
+ARTICLE_PATHS = ['articles']          # Articles in subdirectory
 
-Navigation is automatically generated based on your content structure:
+# Navigation settings
+DISPLAY_PAGES_ON_MENU = True          # Show pages in navigation
+DISPLAY_CATEGORIES_ON_MENU = True     # Show categories in navigation
 
-1. **Root Pages**: Any `.md` file in the content root directory (like `about.md`) 
-2. **Content Folders**: Any top-level folder containing articles (like `work/`, `blog/`)
-
-## Configuration
-
-Only one configuration setting is needed:
-
-```python
-# Folders to ignore in auto-navigation
-IGNORE_FOLDERS = ['.obsidian', 'static', 'templates', 'drafts']
+# Social Media Links (optional)
+SOCIAL = (
+    ("LinkedIn", "https://www.linkedin.com/in/yourusername/"),
+    ("Twitter", "https://www.twitter.com/yourusername"),
+    ("GitHub", "https://github.com/yourusername"),
+)
 ```
 
-- **IGNORE_FOLDERS**: List of folder names to exclude from automatic navigation
-- Default folders are ignored: `.obsidian`, `static`, `templates`, `drafts`
+## Quick Start
+
+1. Install the theme
+2. Update your `pelicanconf.py` with the configuration above
+3. Create content structure:
+   ```
+   content/
+   ├── about.md          # Will appear as "About" in navigation
+   └── articles/
+       └── first-post.md # category: blog → "Blog" in navigation
+   ```
+4. Build your site: `pelican content`
+
+## Navigation
+
+Navigation is automatically generated using standard Pelican functionality:
+
+1. **Pages**: Any `.md` file in the content root directory appears as individual navigation items
+2. **Categories**: Article categories automatically appear as navigation items when articles are published
+
+### Configuration
+
+```python
+# Standard Pelican settings for navigation
+DISPLAY_PAGES_ON_MENU = True          # Show pages in navigation
+DISPLAY_CATEGORIES_ON_MENU = True     # Show categories in navigation
+
+# Content organization
+PAGE_PATHS = ['']                     # Root directory for pages
+ARTICLE_PATHS = ['articles']          # Subdirectory for articles
+ARTICLE_EXCLUDES = ['drafts', 'templates', 'static']  # Exclude from articles
+```
+
+### Navigation Structure
+
+- **Pages** (individual nav items): Content in the root directory with `title` metadata
+- **Categories** (grouped nav items): Automatically generated from `category` metadata in published articles
 
 ## Content Structure
 
 ```
 content/
-├── about.md              # Root page → "About" in navigation
-├── work.md               # Content list page → "Presentations" in navigation
-├── blog.md               # Content list page → "Blog Posts" in navigation  
-├── work/                 # Content folder
-│   ├── project1.md
-│   └── project2.md
-├── blog/                 # Content folder
-│   ├── post1.md
-│   └── post2.md
-└── static/              # Ignored folder
+├── about.md              # Page → "About" in navigation
+├── contact.md            # Page → "Contact" in navigation
+├── articles/             # Articles folder
+│   ├── blog-post-1.md   # category: blog → "Blog" in navigation
+│   ├── blog-post-2.md   # category: blog
+│   ├── presentation-1.md # category: presentation → "Presentation" in navigation
+│   └── presentation-2.md # category: presentation
+└── static/              # Static files (ignored)
 ```
 
-## Content List Pages
+### Article Metadata
 
-For content folders (like `work/`, `blog/`), create corresponding pages in the content root to control how they're displayed:
+Articles should include category metadata to appear in navigation:
 
-**work.md:**
 ```markdown
 ---
-title: Presentations
-template: content_list
-section_name: work
-group_by_category: true
+title: My Blog Post
+date: 2025-01-01
+status: published
+category: blog
+tags:
+  - example
+summary: Brief description
 ---
 ```
 
-**blog.md:**
-```markdown
----
-title: Blog Posts  
-template: content_list
-section_name: blog
-group_by_category: false
----
-```
-
-### Content List Options
-
-- **section_name**: Which folder to display content from
-- **group_by_category**: `true` to group by category, `false` for chronological list
+**Important**: Only articles with `status: published` will appear in category navigation.
 
 ## Templates
 
-This theme includes the following templates:
+This theme includes the following standard Pelican templates:
 
-- `base.html` - Base template with common layout
+- `base.html` - Base template with common layout and navigation
 - `index.html` - Homepage template
-- `article.html` - Individual article/post template
+- `article.html` - Individual article/post template  
 - `page.html` - Static page template
-- `content_list.html` - Flexible content listing template for any content section
-- `category.html` - Category archive
-- `tag.html` - Tag archive
-- `author.html` - Author archive
+- `category.html` - Category listing template (automatically generated)
+- `tag.html` - Tag archive template
+- `author.html` - Author archive template
 
-### Content List Template
+### Navigation Template
 
-The `content_list.html` template displays content from any folder. To use it, create a page with the following metadata:
+The navigation is defined in `navbar.html` and automatically includes:
+- All pages from the content root directory
+- All categories from published articles
 
-```markdown
----
-title: Your Section Title
-template: content_list
-section_name: your_folder_name
-group_by_category: true  # or false
----
-```
+## Category Pages
 
-The template will automatically:
-- Use the page title as the display name
-- Filter content from the specified folder
-- Group by category or list chronologically based on the `group_by_category` setting
+Category pages are automatically generated by Pelican when you have published articles with category metadata. Each category gets its own page at `/category/{category-name}.html` listing all articles in that category.
 
 ## Customization
 
@@ -149,17 +166,79 @@ To customize the appearance, modify `static/css/style.css` or add your own CSS f
 
 For optimal performance, use WebP images when possible. The theme works well with responsive images.
 
+## Troubleshooting
+
+### Categories Not Appearing in Navigation
+
+If your article categories aren't showing up in navigation, check:
+
+1. **Article Status**: Only articles with `status: published` appear in navigation
+   ```markdown
+   ---
+   title: My Article
+   status: published  # Not 'draft'
+   category: blog
+   ---
+   ```
+
+2. **Category Metadata**: Articles must have a `category` field
+3. **Configuration**: Ensure `DISPLAY_CATEGORIES_ON_MENU = True` in your config
+
+### Pages Not Appearing
+
+If pages aren't showing in navigation:
+
+1. **Location**: Pages must be in your content root directory (defined by `PAGE_PATHS`)
+2. **Metadata**: Pages need a `title` field
+3. **Configuration**: Ensure `DISPLAY_PAGES_ON_MENU = True`
+
 ## Portfolio Usage
 
 This theme is optimized for portfolio sites. Structure your content as:
 
 ```
 content/
-├── pages/
-│   └── about.md
-└── work/
-    ├── project1.md
-    └── project2.md
+├── about.md              # Page for "About" navigation
+├── articles/             # Articles organized by category
+│   ├── blog-post-1.md    # category: blog
+│   ├── presentation-1.md # category: presentation  
+│   └── project-1.md      # category: portfolio
+└── static/               # Images, files, etc.
+```
+
+### Example Article Structure
+
+**Blog Post:**
+```markdown
+---
+title: My Latest Thoughts
+date: 2025-01-01
+status: published
+category: blog
+tags:
+  - thoughts
+  - update
+summary: A brief summary of the post
+---
+
+Your blog content here.
+```
+
+**Portfolio Item:**
+```markdown
+---
+title: Amazing Project
+date: 2025-01-01
+status: published
+category: portfolio
+tags:
+  - web-development
+  - design
+summary: Description of the project
+image: images/project-thumbnail.webp
+---
+
+Project description and details.
 ```
 
 ## Requirements
