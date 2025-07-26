@@ -23,15 +23,14 @@
     </li>
   {% endfor %}
 
-  <!-- Menu items (manually added navigation) -->
-  {% if MENUITEMS %}
-    {% for title, link in MENUITEMS %}
-      <li>
-        <a href="{{ link }}" class="contrast">
-          {{ title }}
-        </a>
-      </li>
-    {% endfor %}
-  {% endif %}
+  <!-- Dynamically generated categories -->
+  {% for category, articles in categories %}
+    <li>
+      <a href="/{{ category.url }}" class="contrast"
+         {% if category == current_category %} aria-current="page"{% endif %}>
+        {{ category.name | title }}
+      </a>
+    </li>
+  {% endfor %}
 </ul>
 </nav>
