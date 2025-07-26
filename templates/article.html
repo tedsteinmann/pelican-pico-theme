@@ -39,7 +39,7 @@
     {% if article.authors %}
     <address>
       By {% for author in article.authors %}
-        <a href="{{ author.url }}">{{ author }}</a>
+        <a href="/{{ author.url }}">{{ author }}</a>
       {% endfor %}
     </address>
     {% endif %}
