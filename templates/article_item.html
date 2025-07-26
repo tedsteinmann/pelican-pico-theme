@@ -1,16 +1,14 @@
-<ul style="list-style: none;">
-    <li>
-        <h3>
-            <a href="/{{ article.url }}" class="contrast">{{ article.title }}</a>
-        </h3>
-        <strong>Category:</strong> 
-        <a href="{{ SITEURL }}/{{ article.category.url }}" class="secondary">{{ article.category }}</a>
-        <br>
-        <strong>Tags:</strong> 
-        {% for tag in article.tags %}
-            <a href="/tag/{{ tag }}" class="secondary">{{ tag }}</a>{% if not loop.last %}, {% endif %}
-        {% endfor %}
-        <br>
-        <small>Published on {{ article.date.strftime("%B %d, %Y") }}</small>
-    </li>
-</ul>
+<li>
+    <h3>
+        <a href="/{{ article.url }}" class="contrast">{{ article.title }}</a>
+    </h3>
+    <strong>Category:</strong> 
+    <a href="{{ SITEURL }}/{{ article.category.url }}" class="secondary">{{ article.category }}</a>
+    <br>
+    <strong>Tags:</strong> 
+    {% for tag in article.tags %}
+        <a href="/tag/{{ tag }}" class="secondary">{{ tag }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+    <br>
+    <small>Published on {{ article.date.strftime("%B %d, %Y") }}</small>
+</li>
