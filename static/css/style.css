@@ -10,6 +10,19 @@ a {
     height: auto;
 }
 
+/* Portrait image responsive sizing */
+.portrait-image {
+    /* Desktop: allow full height */
+    max-height: none;
+}
+
+/* Mobile: constrain height to keep content above fold */
+@media (max-width: 768px) {
+    .portrait-image {
+        max-height: 60vh;
+    }
+}
+
 h1 {
     font-size: 2rem; /* Adjust the size as needed */
 }
