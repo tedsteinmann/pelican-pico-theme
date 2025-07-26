@@ -1,7 +1,13 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 
 {% block title %}{{ SITENAME|striptags }} - Articles by {{ author }}{% endblock %}
 
-{% block content_title %}
-    <h2>Articles by {{ author }}</h2>
+{% block content %}
+<h2>Articles by {{ author }}</h2>
+
+<ul style="list-style: none; padding: 0;">
+{% for article in articles %}
+    {% include "article_item.html" %}
+{% endfor %}
+</ul>
 {% endblock %}

@@ -33,23 +33,21 @@
         </div>
 
         <!-- Image Content -->
-        <div style="min-height: 1047px; display: flex; align-items: flex-end;">
-            <img src="static/{{ about_page.image }}" 
+        <div style="display: flex; align-items: flex-end;">
+            <img src="static/{{ about_page.image | replace('.webp', '-600.webp') }}" 
                  srcset="
                    static/{{ about_page.image | replace('.webp', '-300.webp') }} 300w,
                    static/{{ about_page.image | replace('.webp', '-600.webp') }} 600w
                  "
-                 sizes="(max-width: 300px) 300px, 
-                        (max-width: 600px) 600px, 
-                        600px"
+                 sizes="(max-width: 768px) 300px, 600px"
                  decoding="async" 
                  alt="Illustration of {{ AUTHOR }}" 
-                 class="radius responsive-image" 
+                 class="radius responsive-image portrait-image" 
                  fetchpriority="high" 
                  width="785" 
                  height="1047"
                  title="Portrait of {{ AUTHOR }}"
-                 style="display: block; max-width: 100%; height: auto; aspect-ratio: 785/1047;">
+                 style="display: block; max-width: 100%; height: auto;">
         </div>
     </div>
 {% endblock %}
