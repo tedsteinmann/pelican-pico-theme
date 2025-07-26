@@ -23,6 +23,18 @@ a {
     }
 }
 
+/* Remove bullet points from article lists */
+.article-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.article-list li {
+    list-style: none !important;
+    margin-bottom: 1.5rem;
+}
+
 h1 {
     font-size: 2rem; /* Adjust the size as needed */
 }

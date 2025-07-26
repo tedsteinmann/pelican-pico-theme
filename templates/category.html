@@ -3,7 +3,7 @@
 <h2>Category: {{ category }}</h2>
 
 {% block content %}
-    <ul style="list-style: none; padding: 0;">
+    <ul class="article-list">
     {% for article in articles if article.category == category %}
         {% include "article_item.html" %}
     {% endfor %}
