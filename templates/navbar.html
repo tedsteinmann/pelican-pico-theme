@@ -1,33 +1,37 @@
 <nav class="container-fluid">
-    <ul>
+  <ul>
+    <li>
+      <a href="/" class="contrast" aria-label="Back home">
+        <img src="/static/images/logo.svg"
+             alt="box logo"
+             title="Site logo"
+             decoding="async"
+             width="33"
+             height="33"
+             style="width: 33px; height: 33px;">
+      </a>
+    </li>
+    <li>{{ SITENAME }}</li>
+  </ul>
+<ul>
+  <!-- Root-level pages (like About) -->
+  {% for p in pages %}
+    <li>
+      <a href="/{{ p.url }}" class="contrast"{% if p == page %} aria-current="page"{% endif %}>
+        {{ p.title }}
+      </a>
+    </li>
+  {% endfor %}
+
+  <!-- Menu items (manually added navigation) -->
+  {% if MENUITEMS %}
+    {% for title, link in MENUITEMS %}
       <li>
-        <a href="/" class="contrast" aria-label="Back home">
-          <img src="/static/images/logo.svg"
-               alt="box logo"
-               title="Site logo"
-               decoding="async"
-               width="33"
-               height="33"
-               style="width: 33px; height: 33px;">
+        <a href="{{ link }}" class="contrast">
+          {{ title }}
         </a>
       </li>
-      <li>{{ SITENAME }}</li>
-      </ul>
-      <ul>
-        {% for title, link in MENUITEMS %}
-          <li><a href="{{ link }}" class="contrast">{{ title }}</a></li>
-        {% endfor %}
-        {% if DISPLAY_PAGES_ON_MENU %}
-          {% for p in pages %}
-          {% if p.url.endswith('index.html') or p.url.count('/') <= 1 %}
-            <li><a href="/{{ p.url }}" class="contrast" {% if p==page %} aria-current="page" {% endif %}>{{ p.title }}</a></li>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        {% if DISPLAY_CATEGORIES_ON_MENU %}
-          {% for cat, null in categories %}
-            <li><a href="/{{ cat.url }}" class="contrast" {% if cat==category %} aria-current="page" {% endif %}>{{ cat}}</a></li>
-          {% endfor %}
-        {% endif %}
-  </ul>
+    {% endfor %}
+  {% endif %}
+</ul>
 </nav>

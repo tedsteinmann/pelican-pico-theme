@@ -37,44 +37,69 @@ THEME = 'themes/pico'
 HANDLE = 'yourusername'  # Social media handle
 DESCRIPTION = 'Your site description for SEO and social sharing'
 
-# Navigation settings
-DISPLAY_CATEGORIES_ON_MENU = True  # Show categories in navigation
-DISPLAY_PAGES_ON_MENU = True       # Show pages in navigation
+# Simplified Navigation Configuration
 
-# Content section configuration
-CATEGORY_DISPLAY_CONFIG = {
-    'work': {
-        'display': 'Presentations',
-        'group_by_category': True  # Group items by category (for portfolios)
-    },
-    'blog': {
-        'display': 'Blog',
-        'group_by_category': False  # List chronologically (for blogs)
-    },
-    'projects': {
-        'display': 'Projects',
-        'group_by_category': True
-    }
-}
+Navigation is automatically generated based on your content structure:
 
-# Social links (optional)
-SOCIAL = (
-    ('LinkedIn', 'https://linkedin.com/in/yourprofile'),
-    ('Twitter', 'https://twitter.com/yourhandle'),
-    ('GitHub', 'https://github.com/yourusername'),
-)
+1. **Root Pages**: Any `.md` file in the content root directory (like `about.md`) 
+2. **Content Folders**: Any top-level folder containing articles (like `work/`, `blog/`)
+
+## Configuration
+
+Only one configuration setting is needed:
+
+```python
+# Folders to ignore in auto-navigation
+IGNORE_FOLDERS = ['.obsidian', 'static', 'templates', 'drafts']
 ```
 
-### Category Display Configuration
+- **IGNORE_FOLDERS**: List of folder names to exclude from automatic navigation
+- Default folders are ignored: `.obsidian`, `static`, `templates`, `drafts`
 
-The `CATEGORY_DISPLAY_CONFIG` setting allows you to customize how content categories are displayed:
+## Content Structure
 
-- **display**: The display name shown in navigation and page titles
-- **group_by_category**: Whether to group content by category (True) or list chronologically (False)
+```
+content/
+├── about.md              # Root page → "About" in navigation
+├── work.md               # Content list page → "Presentations" in navigation
+├── blog.md               # Content list page → "Blog Posts" in navigation  
+├── work/                 # Content folder
+│   ├── project1.md
+│   └── project2.md
+├── blog/                 # Content folder
+│   ├── post1.md
+│   └── post2.md
+└── static/              # Ignored folder
+```
 
-**Navigation Behavior:**
-- If `DISPLAY_CATEGORIES_ON_MENU = True`, categories will appear in navigation using the display names from `CATEGORY_DISPLAY_CONFIG`
-- If `DISPLAY_CATEGORIES_ON_MENU = False`, categories won't appear in navigation automatically
+## Content List Pages
+
+For content folders (like `work/`, `blog/`), create corresponding pages in the content root to control how they're displayed:
+
+**work.md:**
+```markdown
+---
+title: Presentations
+template: content_list
+section_name: work
+group_by_category: true
+---
+```
+
+**blog.md:**
+```markdown
+---
+title: Blog Posts  
+template: content_list
+section_name: blog
+group_by_category: false
+---
+```
+
+### Content List Options
+
+- **section_name**: Which folder to display content from
+- **group_by_category**: `true` to group by category, `false` for chronological list
 
 ## Templates
 
@@ -82,34 +107,29 @@ This theme includes the following templates:
 
 - `base.html` - Base template with common layout
 - `index.html` - Homepage template
-- `article.html` - Individual article/post template with JSON-LD structured data
+- `article.html` - Individual article/post template
 - `page.html` - Static page template
-- `content_list.html` - Flexible content listing template for any content section (replaces blog_list.html and work_list.html)
+- `content_list.html` - Flexible content listing template for any content section
 - `category.html` - Category archive
 - `tag.html` - Tag archive
 - `author.html` - Author archive
 
 ### Content List Template
 
-The `content_list.html` template is a flexible template that can display any content section. To use it, create a page with the following metadata:
+The `content_list.html` template displays content from any folder. To use it, create a page with the following metadata:
 
 ```markdown
 ---
 title: Your Section Title
 template: content_list
-section_name: your_section_name
+section_name: your_folder_name
+group_by_category: true  # or false
 ---
 ```
 
-The `section_name` should match a key in your `CATEGORY_DISPLAY_CONFIG`. For example:
-
-- `section_name: blog` - Lists all content from the `blog/` folder
-- `section_name: work` - Lists all content from the `work/` folder  
-- `section_name: projects` - Lists all content from the `projects/` folder
-
 The template will automatically:
-- Use the display name from `CATEGORY_DISPLAY_CONFIG`
-- Apply the appropriate JSON-LD schema type for SEO
+- Use the page title as the display name
+- Filter content from the specified folder
 - Group by category or list chronologically based on the `group_by_category` setting
 
 ## Customization

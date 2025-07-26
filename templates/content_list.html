@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% set section_config = CATEGORY_DISPLAY_CONFIG | default({}) %}
 {% set section_name = page.section_name | default("work") %}
-{% set current_config = section_config.get(section_name, {}) %}
-{% set display_name = current_config.get('display', (section_name | capitalize)) %}
-{% set group_by_category = current_config.get('group_by_category', false) %}
+{% set display_name = page.title | default(section_name | title) %}
+{% set group_by_category = page.group_by_category | default(true) %}
 
 <h2>{{ display_name }}</h2>
 
