@@ -47,17 +47,12 @@
     {{ article.content|safe }}
 
     {% if article.media %}
-      {% set media_extension = article.media.split('.')[-1] %} <!-- Extract file extension -->
-      {% if media_extension == 'pdf' %}
-          <iframe src="/static/media/{{ article.media }}"
-                  width="100%" height="800px"
-                  title="PDF preview of {{ article.title }}"
-                  style="border: none;"></iframe>
-      {% else %}
-          <!-- Handle other media types here -->
-          <p>Media file is not a PDF: {{ article.media }}</p>
-      {% endif %}
+    <p>
+      <strong>📄 Download:</strong> 
+      <a href="/static/media/{{ article.media }}" download>{{ article.media }}</a>
+    </p>
     {% endif %}
+
     <hr>
     {% if article.category %}
     <p>
