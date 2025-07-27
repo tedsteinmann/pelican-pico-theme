@@ -165,6 +165,7 @@ To customize the appearance, modify `static/css/style.css` or add your own CSS f
 ### Images
 
 For optimal performance, use WebP images when possible. The theme works well with responsive images.
+Consider using the [pelican-webp-images](https://github.com/tedsteinmann/pelican-webp-images) plugin to automatically generate multiple sizes. The homepage template (`index.html`) now renders the about page image using a `<picture>` tag so responsive WebP sources are served when available.
 
 ## Troubleshooting
 
