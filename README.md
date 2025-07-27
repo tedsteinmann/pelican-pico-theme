@@ -164,7 +164,7 @@ To customize the appearance, modify `static/css/style.css` or add your own CSS f
 
 ### Images
 
-For optimal performance, use WebP images when possible. The theme works well with responsive images.
+For optimal performance, use WebP images when possible. The theme works well with responsive images. You can automate WebP conversion and responsive size generation with the [pelican-webp-images](https://github.com/tedsteinmann/pelican-webp-images) plugin.
 
 ## Troubleshooting
 
