@@ -64,6 +64,7 @@ SOCIAL = (
 3. Create content structure:
    ```
    content/
+   ├── index.md          # Provides homepage content (not in navigation)
    ├── about.md          # Will appear as "About" in navigation
    └── articles/
        └── first-post.md # category: blog → "Blog" in navigation
@@ -99,6 +100,7 @@ ARTICLE_EXCLUDES = ['drafts', 'templates', 'static']  # Exclude from articles
 
 ```
 content/
+├── index.md              # Homepage content (hidden from navigation)
 ├── about.md              # Page → "About" in navigation
 ├── contact.md            # Page → "Contact" in navigation
 ├── articles/             # Articles folder
@@ -165,7 +167,7 @@ To customize the appearance, modify `static/css/style.css` or add your own CSS f
 ### Images
 
 For optimal performance, use WebP images when possible. The theme works well with responsive images.
-Consider using the [pelican-webp-images](https://github.com/tedsteinmann/pelican-webp-images) plugin to automatically generate multiple sizes. The homepage template (`index.html`) now renders the about page image using a `<picture>` tag so responsive WebP sources are served when available.
+Consider using the [pelican-webp-images](https://github.com/tedsteinmann/pelican-webp-images) plugin to automatically generate multiple sizes. The homepage template (`index.html`) now renders the image defined in `index.md` using a `<picture>` tag so responsive WebP sources are served when available.
 
 ## Troubleshooting
 
@@ -199,6 +201,7 @@ This theme is optimized for portfolio sites. Structure your content as:
 
 ```
 content/
+├── index.md              # Homepage content (hidden from navigation)
 ├── about.md              # Page for "About" navigation
 ├── articles/             # Articles organized by category
 │   ├── blog-post-1.md    # category: blog

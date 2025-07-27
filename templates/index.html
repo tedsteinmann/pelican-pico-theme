@@ -3,7 +3,13 @@
 {{ SITENAME }}
 
 {% block content %}
-{% set about_page = pages | selectattr("title", "equalto", "About") | first %}
+{#
+  Pull homepage content from a page titled "Index". This file should live in
+  the content root and will not appear in navigation (the navigation template
+  ignores pages with this title). The page metadata can define `image` and a
+  summary or full content.
+#}
+{% set index_page = pages | selectattr("title", "equalto", "Index") | first %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->
@@ -11,7 +17,7 @@
             <h1><strong>{{ AUTHOR }}</strong></h1>
             <h2 class="secondary">Portfolio</h2>
             <p>
-                {{ about_page.summary }}
+                {{ index_page.summary or index_page.content }}
             </p>
 
             <!-- Social Media Buttons -->
@@ -35,10 +41,10 @@
         <!-- Image Content -->
         <div style="display: flex; align-items: flex-end;">
             <picture>
-                <source srcset="static/{{ about_page.image | replace('.webp', '-300.webp') }}" media="(max-width: 400px)" type="image/webp">
-                <source srcset="static/{{ about_page.image | replace('.webp', '-600.webp') }}" media="(max-width: 800px)" type="image/webp">
-                <source srcset="static/{{ about_page.image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
-                <img src="static/{{ about_page.image }}"
+                <source srcset="static/{{ index_page.image | replace('.webp', '-300.webp') }}" media="(max-width: 400px)" type="image/webp">
+                <source srcset="static/{{ index_page.image | replace('.webp', '-600.webp') }}" media="(max-width: 800px)" type="image/webp">
+                <source srcset="static/{{ index_page.image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
+                <img src="static/{{ index_page.image }}"
                      alt="Illustration of {{ AUTHOR }}"
                      class="radius responsive-image portrait-image"
                      decoding="async"
