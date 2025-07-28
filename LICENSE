@@ -1,13 +1,3 @@
-my_theme/
-    ├── __init__.py
-    ├── theme.py
-    ├── styles/
-    │   ├── style1.css
-    │   └── style2.css
-    └── templates/
-        ├── template1.html
-        └── template2.html
-
 MIT License
 
 Copyright (c) 2025 Ted Steinmann
