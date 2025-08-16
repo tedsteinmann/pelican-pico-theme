@@ -35,8 +35,10 @@
     <meta name="twitter:creator" content="@{{ SITE_DATA.seo.twitter_username }}" />
     <meta name="twitter:title" content="{% if article %}{{ article.title }}{% elif page %}{{ page.title }}{% else %}{{ SITE_DATA.site.title or SITENAME }}{% endif %}" />
     <meta name="twitter:description" content="{% if article and article.summary %}{{ article.summary }}{% elif page and page.summary %}{{ page.summary }}{% else %}{{ SITE_DATA.site.description or DESCRIPTION }}{% endif %}" />
-    {% if SITE_DATA.seo.og_image %}
-    <meta name="twitter:image" content="{{ SITE_DATA.site.url or SITEURL }}/static/{{ SITE_DATA.seo.og_image }}" />
+    {% if article and article.og_image %}
+      <meta name="twitter:image" content="{{ SITE_DATA.site.url or SITEURL }}/static/{{ article.og_image }}" />
+    {% elif SITE_DATA.seo.og_image %}
+      <meta name="twitter:image" content="{{ SITE_DATA.site.url or SITEURL }}/static/{{ SITE_DATA.seo.og_image }}" />
     {% endif %}
     {% endif %}
     
