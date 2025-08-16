@@ -4,54 +4,46 @@
 
 {% block content %}
 {#
-  Pull homepage content from a page titled "Index". This file should live in
-  the content root and will not appear in navigation (the navigation template
-  ignores pages with this title). The page metadata can define `image` and a
-  summary or full content.
+  Homepage content is now pulled from site.yml data file via SITE_DATA
 #}
-{% set index_page = pages | selectattr("title", "equalto", "Index") | first %}
+{% set homepage = SITE_DATA.get('homepage', {}) %}
+{% set social = SITE_DATA.get('social', []) %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->
         <div>
-            <h1><strong>{{ AUTHOR }}</strong></h1>
-            <h2 class="secondary">Portfolio</h2>
-            <p>
-                {{ index_page.summary or index_page.content }}
-            </p>
+            <h1><strong>{{ homepage.title or SITE_DATA.site.title or AUTHOR }}</strong></h1>
+            {% if homepage.subtitle %}<h2 class="secondary">{{ homepage.subtitle }}</h2>{% endif %}
+            {% if homepage.summary %}<p>{{ homepage.summary }}</p>{% endif %}
 
             <!-- Social Media Buttons -->
+            {% if social %}
             <div class="flex gap-2 mt-1">
-                {% for name, url in SOCIAL %}
-                    {% set button_class = "secondary" %}
-                    {% if name == "LinkedIn" %}
-                        {% set button_class = "primary" %}
-                    {% elif name == "Facebook" %}
-                        {% set button_class = "primary" %}
-                    {% elif name == "Twitter" or name == "X" %}
-                        {% set button_class = "contrast" %}
-                    {% elif name == "Github" %}
-                        {% set button_class = "secondary" %}
-                    {% endif %}
-                    <a href="{{ url }}" role="button" class="{{ button_class }}" target="_blank">{{ name }}</a>
+                {% for social_item in social %}
+                    {% set button_class = social_item.button_class or 'secondary' %}
+                    <a href="{{ social_item.url }}" role="button" class="{{ button_class }}" target="_blank" rel="noopener">{{ social_item.name }}</a>
                 {% endfor %}
             </div>
+            {% endif %}
         </div>
 
         <!-- Image Content -->
         <div style="display: flex; align-items: flex-end;">
+            {% set portrait_image = homepage.image or SITE_DATA.site.image %}
+            {% if portrait_image %}
             <picture>
-                <source srcset="static/{{ index_page.image | replace('.webp', '-300.webp') }}" media="(max-width: 400px)" type="image/webp">
-                <source srcset="static/{{ index_page.image | replace('.webp', '-600.webp') }}" media="(max-width: 800px)" type="image/webp">
-                <source srcset="static/{{ index_page.image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
-                <img src="static/{{ index_page.image }}"
-                     alt="Illustration of {{ AUTHOR }}"
+                <source srcset="static/{{ portrait_image | replace('.webp', '-300.webp') }}" media="(max-width: 400px)" type="image/webp">
+                <source srcset="static/{{ portrait_image | replace('.webp', '-600.webp') }}" media="(max-width: 800px)" type="image/webp">
+                <source srcset="static/{{ portrait_image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
+                <img src="static/{{ portrait_image }}"
+                     alt="Portrait of {{ homepage.title or SITE_DATA.site.title or AUTHOR }}"
                      class="radius responsive-image portrait-image"
                      decoding="async"
                      fetchpriority="high"
-                     title="Portrait of {{ AUTHOR }}"
+                     title="Portrait of {{ homepage.title or SITE_DATA.site.title or AUTHOR }}"
                      style="display: block; max-width: 100%; height: auto; aspect-ratio: auto;">
             </picture>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
