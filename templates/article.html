@@ -4,31 +4,15 @@
 
 {% block head %}
   {{ super() }}
-  <meta property="og:title" content="{{ article.title }}">
-  <meta property="og:url" content="{{ SITEURL }}/{{ article.url }}">
-
-  {% if article.description %}
-    <meta name="description" content="{{article.description}}" />
-    <meta property="og:description" content="{{ article.summary }}">
-  {% endif %}
-
+  
+  <!-- Article-specific meta tags (non-duplicate) -->
   {% if article.keywords %}
-    <meta name="keywords" content="{{article.keywords}}" />
+    <meta name="keywords" content="{{ article.keywords }}" />
   {% endif %}
 
   {% if article.summary %}
-  <meta name="summary" content="{{article.summary}}" />
+    <meta name="summary" content="{{ article.summary }}" />
   {% endif %}
-
-  {% for name, url in SOCIAL %}
-    {% if name == "Twitter" %}
-      <meta name="twitter:creator" content="@{{ TWITTER_USERNAME }}">
-    {% endif %}
-  {% endfor %}
-
-<!--<meta property="og:image" content="{{ SITEURL }}/images/og-image.jpg">
-<meta name="twitter:card" content="summary_large_image">-->
-
 {% endblock %}
 
 {% block content %}
@@ -41,10 +25,6 @@
       By {% for author in article.authors %}
         <a href="/{{ author.url }}">{{ author }}</a>
       {% endfor %}
-    </address>
-    {% else %}
-    <address>
-      By <a href="/author/ted-steinmann.html">{{ AUTHOR }}</a>
     </address>
     {% endif %}
 

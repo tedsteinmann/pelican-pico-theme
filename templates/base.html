@@ -12,6 +12,34 @@
     {% if SITESUBTITLE %}
       <meta name="description" content="{{ SITESUBTITLE }}" />
     {% endif %}
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="{% if article %}article{% else %}website{% endif %}" />
+    <meta property="og:title" content="{% if article %}{{ article.title }}{% elif page %}{{ page.title }}{% else %}{{ SITE_DATA.site.title or SITENAME }}{% endif %}" />
+    <meta property="og:description" content="{% if article and article.summary %}{{ article.summary }}{% elif page and page.summary %}{{ page.summary }}{% else %}{{ SITE_DATA.site.description or DESCRIPTION }}{% endif %}" />
+    <meta property="og:url" content="{{ SITE_DATA.site.url or SITEURL }}{% if article %}{{ article.url }}{% elif page %}{{ page.url }}{% endif %}" />
+    {% if article and article.og_image %}
+    <meta property="og:image" content="{{ SITE_DATA.site.url or SITEURL }}/static/{{ article.og_image }}" />
+    {% elif SITE_DATA.seo.og_image %}
+    <meta property="og:image" content="{{ SITE_DATA.site.url or SITEURL }}/static/{{ SITE_DATA.seo.og_image }}" />
+    {% endif %}
+    {% if article and article.og_image or SITE_DATA.seo.og_image %}
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {% endif %}
+    
+    <!-- Twitter Card Meta Tags -->
+    {% if SITE_DATA.seo.twitter_username %}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@{{ SITE_DATA.seo.twitter_username }}" />
+    <meta name="twitter:title" content="{% if article %}{{ article.title }}{% elif page %}{{ page.title }}{% else %}{{ SITE_DATA.site.title or SITENAME }}{% endif %}" />
+    <meta name="twitter:description" content="{% if article and article.summary %}{{ article.summary }}{% elif page and page.summary %}{{ page.summary }}{% else %}{{ SITE_DATA.site.description or DESCRIPTION }}{% endif %}" />
+    {% if SITE_DATA.seo.og_image %}
+    <meta name="twitter:image" content="{{ SITE_DATA.site.url or SITEURL }}/static/{{ SITE_DATA.seo.og_image }}" />
+    {% endif %}
+    {% endif %}
+    
     <link rel="stylesheet" href="/theme/css/pico.min.css">
     <link rel="icon" type="image/png" href="/theme/images/favicon.ico">
 
