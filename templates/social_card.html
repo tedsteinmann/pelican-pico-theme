@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Social Card</title>
+    <link rel="stylesheet" href="{{ SITEURL }}/theme/css/pico.min.css">
     <style>
-        /* Reset and base styles */
+        /* Override Pico's responsive behavior for fixed social card dimensions */
         * {
             margin: 0;
             padding: 0;
@@ -17,8 +18,20 @@
             width: 1200px;
             height: 675px;
             overflow: hidden;
-            background: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            /* Use Pico's light theme colors */
+            background: var(--pico-background-color, #ffffff);
+            font-family: var(--pico-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+            /* Force light mode */
+            color-scheme: light;
+        }
+        
+        /* Disable Pico's dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="dark"]) {
+                --pico-background-color: #ffffff;
+                --pico-color: #1a1a1a;
+                --pico-muted-color: #666666;
+            }
         }
         
         .social-card {
@@ -38,18 +51,24 @@
         }
         
         .tagline {
+            /* Use Pico's typography but scaled for social cards */
             font-size: 64px;
-            font-weight: 700;
-            line-height: 1.1;
-            color: #1a1a1a;
+            font-weight: var(--pico-font-weight, 700);
+            line-height: var(--pico-line-height, 1.1);
+            color: var(--pico-color, #1a1a1a);
+            font-family: inherit;
             word-wrap: break-word;
             hyphens: auto;
+            /* Ensure consistent spacing */
+            margin: 0;
         }
         
         .domain {
             font-size: 24px;
-            color: #666666;
-            font-weight: 500;
+            color: var(--pico-muted-color, #666666);
+            font-weight: var(--pico-font-weight, 500);
+            font-family: inherit;
+            margin: 0;
         }
         
         .portrait {
@@ -65,21 +84,32 @@
             height: auto;
             max-height: 400px;
             object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: var(--pico-border-radius, 12px);
+            /* Use Pico's subtle shadow if available */
+            box-shadow: var(--pico-box-shadow, 0 4px 20px rgba(0, 0, 0, 0.1));
         }
         
         /* Fallback portrait placeholder */
         .portrait-placeholder {
             width: 100%;
             height: 300px;
-            background: #f0f0f0;
-            border-radius: 12px;
+            background: var(--pico-muted-border-color, #f0f0f0);
+            border-radius: var(--pico-border-radius, 12px);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
+            color: var(--pico-muted-color, #999);
             font-size: 18px;
+            font-family: inherit;
+        }
+        
+        /* Override any Pico responsive styles that might interfere */
+        .social-card,
+        .content,
+        .tagline,
+        .domain,
+        .portrait {
+            transition: none !important;
         }
     </style>
 </head>
