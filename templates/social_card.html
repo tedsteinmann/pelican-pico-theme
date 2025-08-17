@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+/* Social card specific styles using Pico CSS variables */
+body.social-card {
+    margin: 0;
+    width: 1200px;
+    height: 675px;
+    overflow: hidden;
+    background: var(--background-color, #ffffff);
+}
+
+/* Hide navigation and other chrome for social cards */
+body.social-card header,
+body.social-card nav,
+body.social-card footer,
+body.social-card .container > *:not(.social-card-content) {
+    display: none !important;
+}
+
+.social-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 60px 80px;
+    box-sizing: border-box;
+    gap: 60px;
+}
+
+.social-tagline {
+    flex: 1;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color, #1f2937);
+    max-width: 600px;
+}
+
+.social-portrait {
+    flex-shrink: 0;
+    width: 300px;
+    height: 400px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.social-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius, 8px);
+}
+
+.social-footer {
+    position: absolute;
+    bottom: 60px;
+    left: 80px;
+    font-size: 18px;
+    color: var(--muted-color, #6b7280);
+    font-weight: 500;
+}
+</style>
+{% endblock head %}
+
+{% block body_class %}social-card{% endblock %}
+
+{% block content %}
+<div class="social-card-content">
+    <div class="social-tagline">{{ tagline }}</div>
+    <div class="social-portrait">
+        {% if portrait_url %}
+        <img src="{{ portrait_url }}" alt="Portrait" />
+        {% else %}
+        <div style="background: var(--muted-border-color, #e5e7eb); border-radius: var(--border-radius, 8px);"></div>
+        {% endif %}
+    </div>
+</div>
+<div class="social-footer">{{ SITENAME or "ted.steinmann.me" }}</div>
+{% endblock content %}

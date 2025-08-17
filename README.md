@@ -13,6 +13,7 @@ A modern, responsive Pelican theme built with [Pico CSS](https://picocss.com/) -
 - **Clean Typography**: Beautiful, readable fonts and spacing
 - **SEO Optimized**: Proper meta tags and structured data
 - **Category Organization**: Automatic category pages for organizing content
+- **Social Share Integration**: Built-in support for automatic social card generation
 
 ## Installation
 
@@ -86,6 +87,95 @@ DISPLAY_PAGES_ON_MENU = True          # Show pages in navigation
 DISPLAY_CATEGORIES_ON_MENU = True     # Show categories in navigation
 ```
 
+## Social Share Cards
+
+This theme includes built-in support for automatic social media card generation using the [pelican-social-share](https://github.com/tedsteinmann/pelican-social-share) plugin.
+
+### Setup
+
+1. **Install the plugin**:
+   ```bash
+   # Add as submodule
+   git submodule add https://github.com/tedsteinmann/pelican-social-share.git plugins/pelican-social-share
+   
+   # Install Playwright for screenshot generation
+   pip install playwright
+   playwright install chromium
+   ```
+
+2. **Configure in `pelicanconf.py`**:
+   ```python
+   PLUGINS = [
+       'social_share',  # Add to your existing plugins
+       # ... other plugins
+   ]
+
+   # Social Share Plugin Settings
+   SOCIAL_TEMPLATE_NAME = "social_card.html"
+   SOCIAL_PORTRAIT_PATH = "content/static/images/portrait.jpg"
+   SOCIAL_SCOPE = "articles"  # "articles", "pages", or "both"
+   
+   # Optional performance settings
+   SOCIAL_HASH_SKIP = True  # Skip unchanged content
+   SOCIAL_DISABLE_SCREENSHOT = False  # Set True for faster dev builds
+   ```
+
+3. **Add taglines to your content**:
+   ```markdown
+   ---
+   title: My Amazing Article
+   date: 2025-01-01
+   category: blog
+   tagline: This compelling tagline will appear on social cards
+   ---
+   
+   Your article content here...
+   ```
+
+### How It Works
+
+The plugin automatically:
+1. **Generates HTML cards** using the theme's `social_card.html` template for any content with a `tagline` field
+2. **Creates PNG images** (1200×675) via browser screenshot for social sharing
+3. **Sets metadata** so the theme automatically uses generated images in Open Graph and Twitter meta tags
+4. **Provides fallbacks** to your existing SEO images when no tagline is present
+
+### Social Card Template
+
+The theme includes a `social_card.html` template that creates beautiful, branded social cards using your existing theme styles:
+
+- **Left side**: Large, bold tagline text using theme typography
+- **Right side**: Portrait image (configurable via `SOCIAL_PORTRAIT_PATH`)
+- **Footer**: Site name for branding
+- **Consistent styling**: Uses Pico CSS variables for colors and spacing
+
+### Generated Files
+
+For each article with a `tagline`, the plugin creates:
+- `content/social/{slug}.html` - The social card HTML (versioned with your content)
+- `content/static/images/social/{slug}.png` - The final social share image
+
+### Development Workflow
+
+**For theme development** (faster builds):
+```python
+SOCIAL_DISABLE_SCREENSHOT = True  # Skip PNG generation
+```
+
+**For content development** (automatic regeneration):
+```python
+SOCIAL_HASH_SKIP = True  # Only regenerate when taglines change
+```
+
+### Metadata Priority
+
+The theme's `base.html` uses this priority for social images:
+1. **Plugin-generated images** (`article.metadata.social_image`) - 1200×675 PNG
+2. **Manual article images** (`article.og_image`) - Your existing setup
+3. **Global fallback** (`SEO.og_image`) - Site-wide default
+
+This ensures a smooth transition where you can add taglines gradually while keeping existing social images working.
+
 ## Quick Start
 
 1. Install the theme
@@ -137,7 +227,12 @@ content/
 │   ├── blog-post-2.md   # category: blog
 │   ├── presentation-1.md # category: presentation → "Presentation" in navigation
 │   └── presentation-2.md # category: presentation
-└── static/              # Static files (ignored)
+├── social/               # Generated social card HTML (auto-created)
+└── static/              
+    ├── images/
+    │   ├── portrait.jpg  # Your portrait for social cards
+    │   └── social/       # Generated social share PNGs (auto-created)
+    └── ...               # Other static files
 ```
 
 ### Article Metadata
@@ -150,6 +245,7 @@ title: My Blog Post
 date: 2025-01-01
 status: published
 category: blog
+tagline: Compelling social media description  # Optional: generates social card
 tags:
   - example
 summary: Brief description
@@ -169,6 +265,7 @@ This theme includes the following standard Pelican templates:
 - `category.html` - Category listing template (automatically generated)
 - `tag.html` - Tag archive template
 - `author.html` - Author archive template
+- `social_card.html` - Social media card template (for pelican-social-share plugin)
 
 ### Navigation Template
 
@@ -224,6 +321,16 @@ If pages aren't showing in navigation:
 2. **Metadata**: Pages need a `title` field
 3. **Configuration**: Ensure `DISPLAY_PAGES_ON_MENU = True`
 
+### Social Cards Not Generating
+
+If social cards aren't being created:
+
+1. **Tagline Required**: Articles must have a `tagline` field in metadata
+2. **Plugin Installation**: Ensure pelican-social-share is installed and in `PLUGINS`
+3. **Playwright Setup**: Run `playwright install chromium` after installing
+4. **Template Exists**: Verify `social_card.html` template exists in your theme
+5. **Portrait Path**: Check that `SOCIAL_PORTRAIT_PATH` points to an existing image
+
 ## Portfolio Usage
 
 This theme is optimized for portfolio sites. Structure your content as:
@@ -248,6 +355,7 @@ title: My Latest Thoughts
 date: 2025-01-01
 status: published
 category: blog
+tagline: Insightful thoughts on the latest trends
 tags:
   - thoughts
   - update
@@ -264,6 +372,7 @@ title: Amazing Project
 date: 2025-01-01
 status: published
 category: portfolio
+tagline: Innovative solution built with modern technology
 tags:
   - web-development
   - design
@@ -278,6 +387,7 @@ Project description and details.
 
 - Pelican 4.0+
 - Python 3.6+
+- Playwright (for social card generation)
 
 ## Browser Support
 
