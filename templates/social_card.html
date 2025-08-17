@@ -16,18 +16,20 @@
             padding: 60px 80px;
             box-sizing: border-box;
             display: flex;
-            align-items: center;
+            align-items: stretch; /* Changed from center to stretch */
             gap: 50px;
         }
         
-        /* Content area */
+        /* Content area - aligned to top left */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Changed from center to flex-start */
+            align-items: flex-start; /* Added: align to left */
             gap: 20px;
             margin: 0;
+            padding-top: 40px; /* Add some top padding */
         }
         
         /* Tagline as main heading */
@@ -37,41 +39,45 @@
             margin: 0;
             word-wrap: break-word;
             hyphens: auto;
+            text-align: left; /* Explicitly left align */
         }
         
         /* Domain as small text */
         small {
             font-size: 24px;
             margin: 0;
+            text-align: left; /* Explicitly left align */
         }
         
-        /* Portrait area */
+        /* Portrait area - fills right area, anchored to bottom right */
         aside {
             width: 320px;
+            height: 90%; /* Fill 90% of height */
             flex-shrink: 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-end; /* Anchor to bottom */
+            justify-content: flex-end; /* Anchor to right */
             margin: 0;
+            position: relative;
         }
         
         img {
             width: 100%;
-            height: auto;
-            max-height: 500px;
+            height: 100%; /* Fill the full height of aside */
             object-fit: cover;
-            object-position: center top; /* Focus on the top of the image (where your head is) */
+            object-position: center bottom; /* Focus on bottom of image */
             display: block;
         }
         
         /* Placeholder for missing portrait */
         aside div {
             width: 100%;
-            height: 300px;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
+            background: #f0f0f0; /* Light background for placeholder */
         }
         
         /* Disable transitions for screenshot consistency */
