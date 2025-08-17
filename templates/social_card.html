@@ -6,126 +6,73 @@
     <title>Social Card</title>
     <link rel="stylesheet" href="{{ SITEURL }}/theme/css/pico.min.css">
     <style>
-        /* Override Pico's responsive behavior for fixed social card dimensions */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        /* Force fixed dimensions for social card */
         body {
             margin: 0;
             width: 1200px;
             height: 675px;
             overflow: hidden;
-            /* Use Pico's light theme colors */
-            background: var(--pico-background-color, #ffffff);
-            font-family: var(--pico-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-            /* Force light mode */
             color-scheme: light;
-        }
-        
-        /* Disable Pico's dark mode */
-        @media (prefers-color-scheme: dark) {
-            :root:not([data-theme="dark"]) {
-                --pico-background-color: #ffffff;
-                --pico-color: #1a1a1a;
-                --pico-muted-color: #666666;
-            }
-        }
-        
-        .social-card {
-            display: flex;
-            height: 100%;
             padding: 60px 80px;
-            gap: 50px;
+            box-sizing: border-box;
+            display: flex;
             align-items: center;
+            gap: 50px;
         }
         
-        .content {
+        /* Content area */
+        main {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: 20px;
-        }
-        
-        .tagline {
-            /* Use Pico's typography but scaled for social cards */
-            font-size: 64px;
-            font-weight: var(--pico-font-weight, 700);
-            line-height: var(--pico-line-height, 1.1);
-            color: var(--pico-color, #1a1a1a);
-            font-family: inherit;
-            word-wrap: break-word;
-            hyphens: auto;
-            /* Ensure consistent spacing */
             margin: 0;
-        }
-        
-        .domain {
-            font-size: 24px;
-            color: var(--pico-muted-color, #666666);
-            font-weight: var(--pico-font-weight, 500);
-            font-family: inherit;
-            margin: 0;
-        }
-        
-        .portrait {
+        }        
+        /* Portrait area */
+        aside {
             width: 320px;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0;
         }
         
-        .portrait img {
+        img {
             width: 100%;
             height: auto;
             max-height: 400px;
             object-fit: cover;
-            border-radius: var(--pico-border-radius, 12px);
-            /* Use Pico's subtle shadow if available */
-            box-shadow: var(--pico-box-shadow, 0 4px 20px rgba(0, 0, 0, 0.1));
         }
         
-        /* Fallback portrait placeholder */
-        .portrait-placeholder {
+        /* Placeholder for missing portrait */
+        aside div {
             width: 100%;
             height: 300px;
-            background: var(--pico-muted-border-color, #f0f0f0);
-            border-radius: var(--pico-border-radius, 12px);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--pico-muted-color, #999);
             font-size: 18px;
-            font-family: inherit;
         }
         
-        /* Override any Pico responsive styles that might interfere */
-        .social-card,
-        .content,
-        .tagline,
-        .domain,
-        .portrait {
+        /* Disable transitions for screenshot consistency */
+        * {
             transition: none !important;
         }
     </style>
 </head>
 <body>
-    <div class="social-card">
-        <div class="content">
-            <div class="tagline">{{ tagline }}</div>
-            <div class="domain">{{ SITENAME or 'ted.steinmann.me' }}</div>
-        </div>
-        <div class="portrait">
-            {% if portrait_url %}
-                <img src="{{ SITEURL }}{{ portrait_url }}" alt="Portrait" />
-            {% else %}
-                <div class="portrait-placeholder">Portrait</div>
-            {% endif %}
-        </div>
-    </div>
+    <main>
+        <h1>{{ tagline }}</h1>
+        <small>{{ SITENAME or 'ted.steinmann.me' }}</small>
+    </main>
+    <aside>
+        {% if portrait_url %}
+            <img src="{{ SITEURL }}{{ portrait_url }}" alt="Portrait" />
+        {% else %}
+            <div>Portrait</div>
+        {% endif %}
+    </aside>
 </body>
 </html>
