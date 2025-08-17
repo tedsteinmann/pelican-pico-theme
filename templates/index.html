@@ -1,18 +1,13 @@
 {% extends "base.html" %}
 
-{{ SITENAME }}
-
 {% block content %}
-{#
-  Homepage content is now pulled from site.yml data file via SITE_DATA
-#}
-{% set homepage = SITE_DATA.get('homepage', {}) %}
-{% set social = SITE_DATA.get('social', []) %}
+{% set homepage = HOMEPAGE %}
+{% set social = SOCIAL %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->
         <div>
-            <h1><strong>{{ homepage.title or SITE_DATA.site.title or AUTHOR }}</strong></h1>
+            <h1><strong>{{ homepage.title or SITENAME or AUTHOR }}</strong></h1>
             {% if homepage.subtitle %}<h2 class="secondary">{{ homepage.subtitle }}</h2>{% endif %}
             {% if homepage.summary %}<p>{{ homepage.summary }}</p>{% endif %}
 
@@ -29,18 +24,18 @@
 
         <!-- Image Content -->
         <div style="display: flex; align-items: flex-end;">
-            {% set portrait_image = homepage.image or SITE_DATA.site.image %}
+            {% set portrait_image = homepage.image or SITE_IMAGE %}
             {% if portrait_image %}
             <picture>
                 <source srcset="static/{{ portrait_image | replace('.webp', '-300.webp') }}" media="(max-width: 400px)" type="image/webp">
                 <source srcset="static/{{ portrait_image | replace('.webp', '-600.webp') }}" media="(max-width: 800px)" type="image/webp">
                 <source srcset="static/{{ portrait_image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
                 <img src="static/{{ portrait_image }}"
-                     alt="Portrait of {{ homepage.title or SITE_DATA.site.title or AUTHOR }}"
+                     alt="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
                      class="radius responsive-image portrait-image"
                      decoding="async"
                      fetchpriority="high"
-                     title="Portrait of {{ homepage.title or SITE_DATA.site.title or AUTHOR }}"
+                     title="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
                      style="display: block; max-width: 100%; height: auto; aspect-ratio: auto;">
             </picture>
             {% endif %}
