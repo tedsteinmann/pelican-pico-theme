@@ -66,7 +66,9 @@ body.social-card .container > *:not(.social-card-content) {
 </style>
 {% endblock head %}
 
-{% block body_class %}social-card{% endblock %}
+{% block body_class %} class="social-card"{% endblock %}
+
+{% block navbar %}{% endblock %}
 
 {% block content %}
 <div class="social-card-content">
@@ -79,5 +81,5 @@ body.social-card .container > *:not(.social-card-content) {
         {% endif %}
     </div>
 </div>
-<div class="social-footer">{{ SITENAME or "ted.steinmann.me" }}</div>
+<div class="social-footer">{{ SITENAME or "github.com/tedsteinmann/pelican-social-share" }}</div>
 {% endblock content %}

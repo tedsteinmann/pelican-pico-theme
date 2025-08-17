@@ -69,8 +69,8 @@
     <link rel="stylesheet" href="/theme/css/style.css">
     {% endblock head %}
 </head>
-<body>
-    {% include 'navbar.html' %}
+<body{% block body_class %}{% endblock %}>
+    {% block navbar %}{% include 'navbar.html' %}{% endblock %}
     <!-- Content -->
     <main>
         <section id="index">
