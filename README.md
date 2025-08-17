@@ -30,15 +30,51 @@ git clone https://github.com/tedsteinmann/pelican-pico-theme.git themes/pico
 
 ## Configuration
 
+Site metadata can be defined in a `site.yml` file placed next to your Pelican configuration:
+
+```yaml
+site:
+  title: Your Site Name
+  author: Your Name
+  url: https://example.com
+  description: Your site description for SEO and social sharing
+  image: static/portrait.webp
+
+homepage:
+  title: Your Name
+  subtitle: Developer
+  summary: Building things
+  image: static/portrait.webp
+
+seo:
+  og_image: static/social-card.jpg
+  twitter_username: yourhandle
+
+social:
+  - name: LinkedIn
+    url: https://www.linkedin.com/in/yourusername/
+  - name: GitHub
+    url: https://github.com/yourusername
+```
+
+These values populate Pelican configuration variables used throughout the templates:
+
+- `SITENAME` – site name shown in navigation and metadata
+- `AUTHOR` – author meta tag and homepage fallback
+- `SITEURL` – canonical site URL for links and social cards
+- `DESCRIPTION` – default description for meta and social tags
+- `SITE_IMAGE` – fallback portrait image for the homepage
+- `HOMEPAGE` – mapping with `title`, `subtitle`, `summary`, `image`
+- `SEO` – mapping with `og_image` and `twitter_username`
+- `SOCIAL` – list of social links (`name`, `url`, optional `button_class`)
+- `DEFAULT_LANG` – language code used in the `<html>` tag (defaults to `en`)
+
+If you do not use `site.yml`, define these variables manually in `pelicanconf.py` or `publishconf.py`.
+
 Add the following to your `pelicanconf.py`:
 
 ```python
 THEME = 'themes/pico'
-
-# Basic site settings
-AUTHOR = 'Your Name'
-SITENAME = 'Your Site Name'
-DESCRIPTION = 'Your site description for SEO and social sharing'
 
 # Content paths
 PATH = 'content'                      # Your content directory
@@ -48,19 +84,12 @@ ARTICLE_PATHS = ['articles']          # Articles in subdirectory
 # Navigation settings
 DISPLAY_PAGES_ON_MENU = True          # Show pages in navigation
 DISPLAY_CATEGORIES_ON_MENU = True     # Show categories in navigation
-
-# Social Media Links (optional)
-SOCIAL = (
-    ("LinkedIn", "https://www.linkedin.com/in/yourusername/"),
-    ("Twitter", "https://www.twitter.com/yourusername"),
-    ("GitHub", "https://github.com/yourusername"),
-)
 ```
 
 ## Quick Start
 
 1. Install the theme
-2. Update your `pelicanconf.py` with the configuration above
+2. Create `site.yml` and update your `pelicanconf.py` with the configuration above
 3. Create content structure:
    ```
    content/
