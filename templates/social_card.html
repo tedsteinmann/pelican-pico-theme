@@ -28,7 +28,23 @@
             justify-content: center;
             gap: 20px;
             margin: 0;
-        }        
+        }
+        
+        /* Tagline as main heading */
+        h1 {
+            font-size: 64px;
+            line-height: 1.1;
+            margin: 0;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        /* Domain as small text */
+        small {
+            font-size: 24px;
+            margin: 0;
+        }
+        
         /* Portrait area */
         aside {
             width: 320px;
@@ -44,6 +60,8 @@
             height: auto;
             max-height: 400px;
             object-fit: cover;
+            /* Ensure image loads before screenshot */
+            display: block;
         }
         
         /* Placeholder for missing portrait */
@@ -60,6 +78,16 @@
         * {
             transition: none !important;
         }
+        
+        /* Add a class to indicate when image is loaded */
+        .image-loaded {
+            opacity: 1;
+        }
+        
+        img {
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
     </style>
 </head>
 <body>
@@ -69,10 +97,46 @@
     </main>
     <aside>
         {% if portrait_url %}
-            <img src="{{ SITEURL }}{{ portrait_url }}" alt="Portrait" />
+            <img src="{{ portrait_url }}" alt="Portrait" 
+                 onload="this.style.opacity='1'; this.classList.add('image-loaded');"
+                 onerror="console.log('Image failed to load:', this.src);" />
         {% else %}
             <div>Portrait</div>
         {% endif %}
     </aside>
+    
+    <script>
+        // Ensure all images are loaded before marking the page as ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            let loadedCount = 0;
+            
+            function checkAllLoaded() {
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    // Add a class to body when all images are loaded
+                    document.body.classList.add('images-ready');
+                    console.log('All images loaded');
+                }
+            }
+            
+            images.forEach(function(img) {
+                if (img.complete) {
+                    checkAllLoaded();
+                } else {
+                    img.addEventListener('load', checkAllLoaded);
+                    img.addEventListener('error', function() {
+                        console.error('Image failed to load:', img.src);
+                        checkAllLoaded(); // Still count as "done" even if error
+                    });
+                }
+            });
+            
+            // If no images, mark as ready
+            if (images.length === 0) {
+                document.body.classList.add('images-ready');
+            }
+        });
+    </script>
 </body>
 </html>
