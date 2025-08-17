@@ -13,7 +13,7 @@
     <meta property="og:type" content="{% if article %}article{% else %}website{% endif %}" />
     <meta property="og:title" content="{% if article %}{{ article.title }}{% elif page %}{{ page.title }}{% else %}{{ SITENAME }}{% endif %}" />
     <meta property="og:description" content="{% if article and article.summary %}{{ article.summary }}{% elif page and page.summary %}{{ page.summary }}{% else %}{{ DESCRIPTION }}{% endif %}" />
-    <meta property="og:url" content="{{ SITEURL }}{% if article %}{{ article.url }}{% elif page %}{{ page.url }}{% endif %}" />
+    <meta property="og:url" content="{{ SITEURL }}/{% if article %}{{ article.url }}{% elif page %}{{ page.url }}{% endif %}" />
     
     <!-- Social Share Plugin Images (priority) -->
     {% if article and article.metadata.social_image %}

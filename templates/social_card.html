@@ -1,85 +1,101 @@
-{% extends "base.html" %}
-
-{% block head %}
-{{ super() }}
-<style>
-/* Social card specific styles using Pico CSS variables */
-body.social-card {
-    margin: 0;
-    width: 1200px;
-    height: 675px;
-    overflow: hidden;
-    background: var(--background-color, #ffffff);
-}
-
-/* Hide navigation and other chrome for social cards */
-body.social-card header,
-body.social-card nav,
-body.social-card footer,
-body.social-card .container > *:not(.social-card-content) {
-    display: none !important;
-}
-
-.social-card-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-    padding: 60px 80px;
-    box-sizing: border-box;
-    gap: 60px;
-}
-
-.social-tagline {
-    flex: 1;
-    font-size: 64px;
-    font-weight: 700;
-    line-height: 1.1;
-    color: var(--color, #1f2937);
-    max-width: 600px;
-}
-
-.social-portrait {
-    flex-shrink: 0;
-    width: 300px;
-    height: 400px;
-    display: flex;
-    align-items: flex-end;
-}
-
-.social-portrait img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--border-radius, 8px);
-}
-
-.social-footer {
-    position: absolute;
-    bottom: 60px;
-    left: 80px;
-    font-size: 18px;
-    color: var(--muted-color, #6b7280);
-    font-weight: 500;
-}
-</style>
-{% endblock head %}
-
-{% block body_class %} class="social-card"{% endblock %}
-
-{% block navbar %}{% endblock %}
-
-{% block content %}
-<div class="social-card-content">
-    <div class="social-tagline">{{ tagline }}</div>
-    <div class="social-portrait">
-        {% if portrait_url %}
-        <img src="{{ portrait_url }}" alt="Portrait" />
-        {% else %}
-        <div style="background: var(--muted-border-color, #e5e7eb); border-radius: var(--border-radius, 8px);"></div>
-        {% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Social Card</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            width: 1200px;
+            height: 675px;
+            overflow: hidden;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .social-card {
+            display: flex;
+            height: 100%;
+            padding: 60px 80px;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .tagline {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #1a1a1a;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        .domain {
+            font-size: 24px;
+            color: #666666;
+            font-weight: 500;
+        }
+        
+        .portrait {
+            width: 320px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .portrait img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Fallback portrait placeholder */
+        .portrait-placeholder {
+            width: 100%;
+            height: 300px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="social-card">
+        <div class="content">
+            <div class="tagline">{{ tagline }}</div>
+            <div class="domain">{{ SITENAME or 'ted.steinmann.me' }}</div>
+        </div>
+        <div class="portrait">
+            {% if portrait_url %}
+                <img src="{{ SITEURL }}{{ portrait_url }}" alt="Portrait" />
+            {% else %}
+                <div class="portrait-placeholder">Portrait</div>
+            {% endif %}
+        </div>
     </div>
-</div>
-<div class="social-footer">{{ SITENAME or "github.com/tedsteinmann/pelican-social-share" }}</div>
-{% endblock content %}
+</body>
+</html>
