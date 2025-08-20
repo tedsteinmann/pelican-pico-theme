@@ -1,148 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Social Card</title>
-    <link rel="stylesheet" href="{{ SITEURL }}/theme/css/pico.min.css">
-    <style>
-        /* Force fixed dimensions for social card */
-        body {
-            margin: 0;
-            width: 1200px;
-            height: 675px;
-            overflow: hidden;
-            color-scheme: light;
-            padding: 60px 80px;
-            box-sizing: border-box;
-            display: flex;
-            align-items: stretch; /* Changed from center to stretch */
-            gap: 50px;
-        }
-        
-        /* Content area - aligned to top left */
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; /* Changed from center to flex-start */
-            align-items: flex-start; /* Added: align to left */
-            gap: 20px;
-            margin: 0;
-            padding-top: 40px; /* Add some top padding */
-        }
-        
-        /* Tagline as main heading */
-        h1 {
-            font-size: 64px;
-            line-height: 1.1;
-            margin: 0;
-            word-wrap: break-word;
-            hyphens: auto;
-            text-align: left; /* Explicitly left align */
-        }
-        
-        /* Domain as small text */
-        small {
-            font-size: 24px;
-            margin: 0;
-            text-align: left; /* Explicitly left align */
-        }
-        
-        /* Portrait area - fills right area, anchored to bottom right */
-        aside {
-            width: 300px;
-            height: 400px; /* Fill % of height */
-            flex-shrink: 0;
-            display: flex;
-            align-items: flex-end; /* Anchor to bottom */
-            justify-content: flex-end; /* Anchor to right */
-            margin: 0;
-            position: relative;
-        }
-        
-        img {
-            width: 100%;
-            height: 100%; /* Fill the full height of aside */
-            object-fit: cover;
-            object-position: center bottom; /* Focus on bottom of image */
-            display: block;
-        }
-        
-        /* Placeholder for missing portrait */
-        aside div {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            background: #f0f0f0; /* Light background for placeholder */
-        }
-        
-        /* Disable transitions for screenshot consistency */
-        * {
-            transition: none !important;
-        }
-        
-        /* Add a class to indicate when image is loaded */
-        .image-loaded {
-            opacity: 1;
-        }
-        
-        img {
-            opacity: 0;
-            transition: opacity 0.1s;
-        }
-    </style>
+<meta charset="utf-8">
+<title>Social Card</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="{{ SITEURL }}/theme/css/pico.min.css">
+<style>
+/* Canvas */
+body {
+  margin: 0;
+  width: 1200px;
+  height: 630px;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:#fff;
+  color:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  padding:0;
+  box-sizing:border-box;
+}
+/* Safe zone: centered square (height x height) = 630x630 */
+.safe-zone {
+  position:relative;
+  width:630px;
+  height:630px;
+  display:flex;
+  flex-direction:row;
+  gap:48px;
+  padding:72px 64px;
+  box-sizing:border-box;
+}
+/* Optional debug outline (add ?debug to URL) */
+body.debug .safe-zone { outline:3px dashed rgba(255,0,0,0.35); outline-offset:0; }
+
+main {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  gap:28px;
+}
+
+h1 {
+  font-size:72px;
+  line-height:1.05;
+  margin:0;
+  letter-spacing:-1px;
+  max-width:100%;
+  word-wrap:break-word;
+  hyphens:auto;
+}
+
+small {
+  font-size:28px;
+  opacity:0.75;
+  margin:0;
+}
+
+aside {
+  width:180px;
+  flex-shrink:0;
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-end;
+}
+
+aside img {
+  width:180px;
+  height:180px;
+  border-radius:16px;
+  object-fit:cover;
+  object-position:center;
+  box-shadow:0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* Placeholder */
+aside .placeholder {
+  width:180px;
+  height:180px;
+  border-radius:16px;
+  background:#eee;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  color:#666;
+  font-weight:500;
+  letter-spacing:.5px;
+}
+
+* { transition:none !important; }
+</style>
 </head>
 <body>
+  <div class="safe-zone">
     <main>
-        <h1>{{ tagline }}</h1>
-        <small>{{ SITENAME or 'ted.steinmann.me' }}</small>
+      <h1>{{ tagline }}</h1>
+      <small>{{ SITENAME or 'site' }}</small>
     </main>
     <aside>
-        {% if portrait_url %}
-            <img src="{{ portrait_url }}" alt="Portrait" 
-                 onload="this.style.opacity='1'; this.classList.add('image-loaded');"
-                 onerror="console.log('Image failed to load:', this.src);" />
-        {% else %}
-            <div>Portrait</div>
-        {% endif %}
+      {% if portrait_url %}
+        <img src="{{ portrait_url }}" alt="Portrait">
+      {% else %}
+        <div class="placeholder">Portrait</div>
+      {% endif %}
     </aside>
-    
-    <script>
-        // Ensure all images are loaded before marking the page as ready
-        document.addEventListener('DOMContentLoaded', function() {
-            const images = document.querySelectorAll('img');
-            let loadedCount = 0;
-            
-            function checkAllLoaded() {
-                loadedCount++;
-                if (loadedCount === images.length) {
-                    // Add a class to body when all images are loaded
-                    document.body.classList.add('images-ready');
-                    console.log('All images loaded');
-                }
-            }
-            
-            images.forEach(function(img) {
-                if (img.complete) {
-                    checkAllLoaded();
-                } else {
-                    img.addEventListener('load', checkAllLoaded);
-                    img.addEventListener('error', function() {
-                        console.error('Image failed to load:', img.src);
-                        checkAllLoaded(); // Still count as "done" even if error
-                    });
-                }
-            });
-            
-            // If no images, mark as ready
-            if (images.length === 0) {
-                document.body.classList.add('images-ready');
-            }
-        });
-    </script>
+  </div>
+<script>
+if (location.search.includes('debug')) document.body.classList.add('debug');
+</script>
 </body>
 </html>
