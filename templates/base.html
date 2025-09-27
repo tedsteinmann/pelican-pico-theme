@@ -7,12 +7,22 @@
     <meta name="generator" content="Pelican" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="{{ AUTHOR }}" />
-    <meta name="description" content="{{ DESCRIPTION }}" />
-    
+    {% if article and article.summary %}
+    {% set _raw_meta = article.summary %}
+    {% elif page and page.summary %}
+    {% set _raw_meta = page.summary %}
+    {% else %}
+    {% set _raw_meta = DESCRIPTION %}
+    {% endif %}
+    {% set meta_description = _raw_meta|striptags|truncate(160) %}
+    {% set meta_description_long = _raw_meta|striptags|truncate(200) %}
+
+    <meta name="description" content="{{ meta_description }}" />
+
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:type" content="{% if article %}article{% else %}website{% endif %}" />
     <meta property="og:title" content="{% if article %}{{ article.title }}{% elif page %}{{ page.title }}{% else %}{{ SITENAME }}{% endif %}" />
-    <meta property="og:description" content="{% if article and article.summary %}{{ article.summary }}{% elif page and page.summary %}{{ page.summary }}{% else %}{{ DESCRIPTION }}{% endif %}" />
+    <meta property="og:description" content="{{ meta_description_long }}" />
     <meta property="og:url" content="{{ SITEURL }}/{% if article %}{{ article.url }}{% elif page %}{{ page.url }}{% endif %}" />
     
     <!-- Social Share Plugin Images (priority) -->
@@ -44,7 +54,7 @@
     <meta name="twitter:creator" content="@{{ SEO.twitter_username }}" />
     {% endif %}
     <meta name="twitter:title" content="{% if article %}{{ article.title }}{% elif page %}{{ page.title }}{% else %}{{ SITENAME }}{% endif %}" />
-    <meta name="twitter:description" content="{% if article and article.summary %}{{ article.summary }}{% elif page and page.summary %}{{ page.summary }}{% else %}{{ DESCRIPTION }}{% endif %}" />
+    <meta name="twitter:description" content="{{ meta_description_long }}" />
     
     <!-- Twitter Card Image (follows same priority as OG) -->
     {% if article and article.metadata.social_image %}
