@@ -18,6 +18,12 @@
     {% set meta_description_long = _raw_meta|striptags|truncate(200) %}
 
     <meta name="description" content="{{ meta_description }}" />
+    {% if article and article.keywords %}
+    <meta name="keywords" content="{{ article.keywords }}" />
+    {% endif %}
+    {% if article and article.summary %}
+    <meta name="summary" content="{{ meta_description_long }}" />
+    {% endif %}
 
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:type" content="{% if article %}article{% else %}website{% endif %}" />

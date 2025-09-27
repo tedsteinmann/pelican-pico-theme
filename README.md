@@ -82,9 +82,24 @@ PATH = 'content'                      # Your content directory
 PAGE_PATHS = ['']                     # Pages in content root
 ARTICLE_PATHS = ['articles']          # Articles in subdirectory
 
-# Navigation settings
-DISPLAY_PAGES_ON_MENU = True          # Show pages in navigation
-DISPLAY_CATEGORIES_ON_MENU = True     # Show categories in navigation
+```
+
+You can explicitly control the top-level navigation using `MENUITEMS`. This is useful when you want a specific order or labels that differ from page filenames. `MENUITEMS` should be a list of (title, url) tuples.
+
+Example `pelicanconf.py` additions:
+
+```python
+# Explicit menu items (title, link)
+MENUITEMS = [
+  ('About', '/about.html'),
+  ('Projects', '/category/projects.html'),
+  ('Downloads', '/category/downloads.html'),
+]
+
+# When present, MENUITEMS is rendered by the theme's navbar.
+# Statically configured MENUITEMS works together with the automatic
+# page/category menus controlled by DISPLAY_PAGES_ON_MENU and
+# DISPLAY_CATEGORIES_ON_MENU — use whichever combination fits your site.
 ```
 
 ## Social Share Cards

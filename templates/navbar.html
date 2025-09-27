@@ -14,25 +14,12 @@
     <li>{{ SITENAME }}</li>
   </ul>
 <ul>
-  <!-- Root-level pages (like About) -->
-  {% for p in pages %}
-    {% if p.title != "Index" %}
-    <li>
-      <a href="/{{ p.url }}" class="contrast"{% if p == page %} aria-current="page"{% endif %}>
-        {{ p.title }}
-      </a>
-    </li>
-    {% endif %}
-  {% endfor %}
 
   <!-- Dynamically generated categories -->
-  {% for category, articles in categories %}
+    {% for title, link in MENUITEMS %}
     <li>
-      <a href="/{{ category.url }}" class="contrast"
-         {% if category == current_category %} aria-current="page"{% endif %}>
-        {{ category.name | title }}
-      </a>
+      <a href="{{ link }}" class="contrast">{{ title }}</a>
+    {% endfor %}
     </li>
-  {% endfor %}
 </ul>
 </nav>

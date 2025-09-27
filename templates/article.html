@@ -7,11 +7,7 @@
   
   <!-- Article-specific meta tags (non-duplicate) -->
   {% if article.keywords %}
-    <meta name="keywords" content="{{ article.keywords }}" />
-  {% endif %}
-
-  {% if article.summary %}
-    <meta name="summary" content="{{ article.summary }}" />
+    <!-- keywords/summary moved to base.html -->
   {% endif %}
 {% endblock %}
 
