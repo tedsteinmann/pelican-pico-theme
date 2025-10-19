@@ -10,7 +10,7 @@
         
         <h5>Share</h5>
         <ul>
-          <li><a href="https://twitter.com/intent/tweet?url={{ SITEURL }}{% if article %}/{{ article.url }}{% elif page %}/{{ page.url }}{% endif %}&text={% if article %}{{ article.title|urlencode }}{% elif page %}{{ page.title|urlencode }}{% else %}{{ SITENAME|urlencode }}{% endif %}" target="_blank" rel="noopener">Share on X/Twitter</a></li>
+          <li><a href="https://twitter.com/intent/tweet?text={% if article %}{{ article.summary|striptags|urlencode }}%20{{ SITEURL }}/{{ article.url }}{% elif page %}{{ page.summary|striptags|urlencode }}%20{{ SITEURL }}/{{ page.url }}{% else %}{{ SITENAME|urlencode }}%20{{ SITEURL }}{% endif %}" target="_blank" rel="noopener">Share on X/Twitter</a></li>
           <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ SITEURL }}{% if article %}/{{ article.url }}{% elif page %}/{{ page.url }}{% endif %}" target="_blank" rel="noopener">Share on LinkedIn</a></li>
         </ul>
       </div>
