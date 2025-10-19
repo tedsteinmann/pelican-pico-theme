@@ -1,8 +1,16 @@
 <footer class="container-fluid">
   <div class="grid">
     <div>
-      <h4>About</h4>
-      <p><a href="/about-me.html">About Me</a></p>
+      <h4>Links</h4>
+      <ul>
+        {% if LINKS %}
+          {% for title, url in LINKS %}
+            <li><a href="{{ url }}">{{ title }}</a></li>
+          {% endfor %}
+        {% else %}
+          <li><a href="/about">About Me</a></li>
+        {% endif %}
+      </ul>
       
       <h4>Share</h4>
       <ul>

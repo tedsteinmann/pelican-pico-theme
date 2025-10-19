@@ -82,7 +82,7 @@
     <link rel="stylesheet" href="/theme/css/pico.min.css">
     <link rel="icon" type="image/png" href="/theme/images/favicon.ico">
 
-    <link rel="stylesheet" href="/theme/css/style.css">
+    <link rel="stylesheet" href="/theme/css/style.css?v={{ SITEUPDATED|default(SITENAME)|urlencode }}">
     {% endblock head %}
 </head>
 <body{% block body_class %}{% endblock %}>
