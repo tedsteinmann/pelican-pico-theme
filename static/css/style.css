@@ -43,10 +43,6 @@ h1 {
 .show-on-mobile {
     display: none;
 }
-/* Responsive navbar utilities */
-.show-on-mobile {
-    display: none;
-}
 
 @media (max-width: 768px) {
     .hide-on-mobile {
@@ -56,6 +52,12 @@ h1 {
     .show-on-mobile {
         display: block;
     }
+}
+
+/* Make dropdown box more visible */
+.dropdown ul {
+    border: 1px solid var(--muted-border-color);
+    box-shadow: var(--card-box-shadow);
 }
 
 /* Footer styling - Pico CSS native approach */
