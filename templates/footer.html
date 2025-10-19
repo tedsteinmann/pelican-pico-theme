@@ -1,50 +1,53 @@
 <footer class="container-fluid">
-  <div class="container">
-    <div class="grid">
-      <!-- About Section -->
-      <div>
-        <h5>About</h5>
-        <ul>
-          <li><a href="/about.html">About Me</a></li>
-        </ul>
-        
-        <h5>Share</h5>
-        <ul>
-          <li><a href="https://twitter.com/intent/tweet?text={% if article %}{{ article.summary|striptags|urlencode }}%20{{ SITEURL }}/{{ article.url }}{% elif page %}{{ page.summary|striptags|urlencode }}%20{{ SITEURL }}/{{ page.url }}{% else %}{{ SITENAME|urlencode }}%20{{ SITEURL }}{% endif %}" target="_blank" rel="noopener">Share on X/Twitter</a></li>
-          <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ SITEURL }}{% if article %}/{{ article.url }}{% elif page %}/{{ page.url }}{% endif %}" target="_blank" rel="noopener">Share on LinkedIn</a></li>
-        </ul>
-      </div>
+  <div class="grid">
+    <div>
+      <h4>About</h4>
+      <p><a href="/about-me.html">About Me</a></p>
       
-      <!-- Feeds Section -->
-      <div>
-        <h5>Feeds</h5>
-        <ul>
-          {% if FEED_ALL_ATOM %}
-          <li><a href="{{ FEED_DOMAIN }}/{% if FEED_ALL_ATOM_URL %}{{ FEED_ALL_ATOM_URL }}{% else %}{{ FEED_ALL_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate">All Posts (Atom)</a></li>
+      <h4>Share</h4>
+      <ul>
+        <li>
+          {% if article %}
+            <a href="https://twitter.com/intent/tweet?url={{ SITEURL }}/{{ article.url }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener">Share on X</a>
+          {% elif page %}
+            <a href="https://twitter.com/intent/tweet?url={{ SITEURL }}/{{ page.url }}&text={{ page.title|urlencode }}" target="_blank" rel="noopener">Share on X</a>
+          {% else %}
+            <a href="https://twitter.com/intent/tweet?url={{ SITEURL }}&text={{ SITENAME|urlencode }}" target="_blank" rel="noopener">Share on X</a>
           {% endif %}
-          {% if FEED_ALL_RSS %}
-          <li><a href="{{ FEED_DOMAIN }}/{% if FEED_ALL_RSS_URL %}{{ FEED_ALL_RSS_URL }}{% else %}{{ FEED_ALL_RSS }}{% endif %}" type="application/rss+xml" rel="alternate">All Posts (RSS)</a></li>
+        </li>
+        <li>
+          {% if article %}
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ SITEURL }}/{{ article.url }}" target="_blank" rel="noopener">Share on LinkedIn</a>
+          {% elif page %}
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ SITEURL }}/{{ page.url }}" target="_blank" rel="noopener">Share on LinkedIn</a>
+          {% else %}
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ SITEURL }}" target="_blank" rel="noopener">Share on LinkedIn</a>
           {% endif %}
-          
-          {% if CATEGORY_FEED_ATOM and categories %}
-          {% for category, articles in categories %}
-          <li><a href="{{ FEED_DOMAIN }}/feeds/{{ category.slug }}.atom.xml" type="application/atom+xml" rel="alternate">{{ category|capitalize }} Feed</a></li>
-          {% endfor %}
-          {% endif %}
-          
-          {% if TAG_FEED_ATOM and tags %}
-          {% for tag in tags %}
-          <li><a href="{{ FEED_DOMAIN }}/feeds/{{ tag.slug }}.atom.xml" type="application/atom+xml" rel="alternate">{{ tag|capitalize }} Tag Feed</a></li>
-          {% endfor %}
-          {% endif %}
-        </ul>
-      </div>
+        </li>
+      </ul>
     </div>
-    
-    <hr>
-    
-    <p style="text-align: center; color: var(--muted-color);">
-      <small>&copy; {{ AUTHOR }} | Built with <a href="https://getpelican.com/" target="_blank">Pelican</a></small>
-    </p>
+
+    <div>
+      <h4>Feeds</h4>
+      <ul>
+        {% if FEED_ALL_ATOM %}
+        <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}">All Posts (Atom)</a></li>
+        {% endif %}
+        
+        {% if FEED_BLOG_ATOM %}
+        <li><a href="{{ FEED_DOMAIN }}/{{ FEED_BLOG_ATOM }}">Blog Feed (Atom)</a></li>
+        {% endif %}
+        
+        {% if tag and TAG_FEED_ATOM %}
+        <li><a href="{{ FEED_DOMAIN }}/{{ TAG_FEED_ATOM.format(slug=tag.slug) }}">{{ tag.name|replace('-', ' ')|title }} Feed (Atom)</a></li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
+
+  <hr>
+
+  <p style="text-align: center;">
+    <small>&copy; {{ CURRENT_YEAR }} {{ AUTHOR }}. Powered by <a href="https://getpelican.com/">Pelican</a>.</small>
+  </p>
 </footer>
