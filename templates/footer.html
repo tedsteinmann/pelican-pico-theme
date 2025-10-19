@@ -1,17 +1,50 @@
-<footer>
-{% if SOCIAL or FEED_ALL_ATOM or FEED_ALL_RSS %}
-    <section>
-        <div class="container">
-            <h2>Feed</h2>
-            <ul>
-                {% if FEED_ALL_ATOM %}
-                        <li><a href="{{ FEED_DOMAIN }}/{% if FEED_ALL_ATOM_URL %}{{ FEED_ALL_ATOM_URL }}{% else %}{{ FEED_ALL_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate">atom feed</a></li>
-                {% endif %}
-                {% if FEED_ALL_RSS %}
-                        <li><a href="{{ FEED_DOMAIN }}/{% if FEED_ALL_RSS_URL %}{{ FEED_ALL_RSS_URL }}{% else %}{{ FEED_ALL_RSS }}{% endif %}" type="application/rss+xml" rel="alternate">rss feed</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </section>
-{% endif %}
+<footer class="container-fluid">
+  <div class="container">
+    <div class="grid">
+      <!-- About Section -->
+      <div>
+        <h5>About</h5>
+        <ul>
+          <li><a href="/about.html">About Me</a></li>
+        </ul>
+        
+        <h5>Share</h5>
+        <ul>
+          <li><a href="https://twitter.com/intent/tweet?url={{ SITEURL }}{% if article %}/{{ article.url }}{% elif page %}/{{ page.url }}{% endif %}&text={% if article %}{{ article.title|urlencode }}{% elif page %}{{ page.title|urlencode }}{% else %}{{ SITENAME|urlencode }}{% endif %}" target="_blank" rel="noopener">Share on X/Twitter</a></li>
+          <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ SITEURL }}{% if article %}/{{ article.url }}{% elif page %}/{{ page.url }}{% endif %}" target="_blank" rel="noopener">Share on LinkedIn</a></li>
+        </ul>
+      </div>
+      
+      <!-- Feeds Section -->
+      <div>
+        <h5>Feeds</h5>
+        <ul>
+          {% if FEED_ALL_ATOM %}
+          <li><a href="{{ FEED_DOMAIN }}/{% if FEED_ALL_ATOM_URL %}{{ FEED_ALL_ATOM_URL }}{% else %}{{ FEED_ALL_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate">All Posts (Atom)</a></li>
+          {% endif %}
+          {% if FEED_ALL_RSS %}
+          <li><a href="{{ FEED_DOMAIN }}/{% if FEED_ALL_RSS_URL %}{{ FEED_ALL_RSS_URL }}{% else %}{{ FEED_ALL_RSS }}{% endif %}" type="application/rss+xml" rel="alternate">All Posts (RSS)</a></li>
+          {% endif %}
+          
+          {% if CATEGORY_FEED_ATOM and categories %}
+          {% for category, articles in categories %}
+          <li><a href="{{ FEED_DOMAIN }}/feeds/{{ category.slug }}.atom.xml" type="application/atom+xml" rel="alternate">{{ category|capitalize }} Feed</a></li>
+          {% endfor %}
+          {% endif %}
+          
+          {% if TAG_FEED_ATOM and tags %}
+          {% for tag in tags %}
+          <li><a href="{{ FEED_DOMAIN }}/feeds/{{ tag.slug }}.atom.xml" type="application/atom+xml" rel="alternate">{{ tag|capitalize }} Tag Feed</a></li>
+          {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    
+    <hr>
+    
+    <p style="text-align: center; color: var(--muted-color);">
+      <small>&copy; {{ AUTHOR }} | Built with <a href="https://getpelican.com/" target="_blank">Pelican</a></small>
+    </p>
+  </div>
 </footer>

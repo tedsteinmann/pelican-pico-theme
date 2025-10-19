@@ -38,3 +38,29 @@ a {
 h1 {
     font-size: 2rem; /* Adjust the size as needed */
 }
+
+/* Responsive navbar utilities */
+.show-on-mobile {
+    display: none;
+}
+/* Responsive navbar utilities */
+.show-on-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none;
+    }
+    
+    .show-on-mobile {
+        display: block;
+    }
+}
+
+/* Footer styling - Pico CSS native approach */
+footer {
+    background-color: var(--pico-card-background-color);
+    border-top: var(--pico-border-width) solid var(--pico-muted-border-color);
+    margin-top: var(--pico-block-spacing-vertical);
+}
