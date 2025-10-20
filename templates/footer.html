@@ -1,17 +1,29 @@
 <footer class="container-fluid">
   <div class="grid">
     <div>
-      <h4>Links</h4>
+      <h4>Pages</h4>
       <ul>
-        {% if LINKS %}
-          {% for title, url in LINKS %}
-            <li><a href="{{ url }}">{{ title }}</a></li>
-          {% endfor %}
-        {% else %}
-          <li><a href="/about">About Me</a></li>
-        {% endif %}
+        {% for p in pages|sort(attribute='title') %}
+          <li><a href="{{ SITEURL }}/{{ p.url }}">{{ p.title }}</a></li>
+        {% endfor %}
       </ul>
       
+      <h4>Tags</h4>
+      <ul>
+        {% if tags %}
+          {% for t, t_articles in tags %}
+            <li>
+              <a href="{{ SITEURL }}/{{ t.url }}">{{ t.name|replace('-', ' ')|title }}</a>
+              <small>({{ t_articles|length }})</small>
+            </li>
+          {% endfor %}
+        {% else %}
+          <li><small>No tags</small></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div>
       <h4>Share</h4>
       <ul>
         <li>
@@ -33,9 +45,6 @@
           {% endif %}
         </li>
       </ul>
-    </div>
-
-    <div>
       <h4>Feeds</h4>
       <ul>
         {% if FEED_ALL_ATOM %}

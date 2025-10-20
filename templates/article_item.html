@@ -2,6 +2,7 @@
     <h3>
         <a href="/{{ article.url }}" class="contrast">{{ article.title }}</a>
     </h3>
+    <blockquote>{{ article.summary }}
     <strong>Category:</strong> 
     <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
     <br>
@@ -11,4 +12,5 @@
     {% endfor %}
     <br>
     <small>Published on {{ article.date.strftime("%B %d, %Y") }}</small>
+    </blockquote>
 </li>

@@ -3,12 +3,7 @@
 {% block title %}{{ SITENAME|striptags }} - {{ article.title|striptags  }}{% endblock %}
 
 {% block head %}
-  {{ super() }}
-  
-  <!-- Article-specific meta tags (non-duplicate) -->
-  {% if article.keywords %}
-    <!-- keywords/summary moved to base.html -->
-  {% endif %}
+  {{ super() }}  
 {% endblock %}
 
 {% block content %}

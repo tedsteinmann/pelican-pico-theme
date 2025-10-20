@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
-<h2>Category: {{ category }}</h2>
-
 {% block content %}
-    <ul class="article-list">
+  {% set raw_category = category.name if (category is not string) else category %}
+  {% set category_title = raw_category|replace('-', ' ')|title %}
+
+  <header>
+    <h2>{{ category_title }}</h2>
+  </header>
+  <hr>
+
+  <ul class="article-list">
     {% for article in articles if article.category == category %}
         {% include "article_item.html" %}
     {% endfor %}
-    </ul>
+  </ul>
 {% endblock %}

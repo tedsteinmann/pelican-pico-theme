@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
-<h2>Tag: {{ tag }}</h2>
-
 {% block content %}
-    <ul style="list-style: none; padding: 0;">
+
+{% set tag_name = tag.name|title|replace('-', ' ') if (tag is not string) else tag|title|replace('-', ' ') %}
+
+  <header>
+    <h2>{{ tag_name }}</h2>
+  </header>
+  <hr>
+  <ul class="article-list">
     {% for article in articles if tag in article.tags %}
-        {% include "article_item.html" %}
+      {% include "article_item.html" %}
     {% endfor %}
-    </ul>
-{% endblock %}
+  </ul>
+
+  {% endblock %}
