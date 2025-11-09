@@ -7,6 +7,7 @@
     <meta name="generator" content="Pelican" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="{{ AUTHOR }}" />
+    <meta name="theme-color" content="#11191f">
     {% if article and article.summary %}
     {% set _raw_meta = article.summary %}
     {% elif page and page.summary %}
@@ -79,10 +80,71 @@
     <meta name="twitter:card" content="summary" />
     {% endif %}
     
+    <link rel="icon" type="image/x-icon" href="/theme/images/favicon.ico">
+    <link rel="preload" href="/theme/css/pico.min.css" as="style">
     <link rel="stylesheet" href="/theme/css/pico.min.css">
-    <link rel="icon" type="image/png" href="/theme/images/favicon.ico">
+    
+    <style>
+    /* Inline critical CSS for better performance */
+    a {
+        text-decoration: none;
+    }
 
-    <link rel="stylesheet" href="/theme/css/style.css?v={{ SITEUPDATED|default(SITENAME)|urlencode }}">
+    .responsive-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .portrait-image {
+        max-height: none;
+    }
+
+    @media (max-width: 768px) {
+        .portrait-image {
+            max-height: 60vh;
+        }
+    }
+
+    .article-list {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .article-list li {
+        list-style: none !important;
+        margin-bottom: 1.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .show-on-mobile {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .hide-on-mobile {
+            display: none;
+        }
+        
+        .show-on-mobile {
+            display: block;
+        }
+    }
+
+    .dropdown ul {
+        border: 1px solid var(--muted-border-color);
+        box-shadow: var(--card-box-shadow);
+    }
+
+    footer {
+        background-color: var(--pico-card-background-color);
+        border-top: var(--pico-border-width) solid var(--pico-muted-border-color);
+        margin-top: var(--pico-block-spacing-vertical);
+    }
+    </style>
     {% endblock head %}
 </head>
 <body{% block body_class %}{% endblock %}>
