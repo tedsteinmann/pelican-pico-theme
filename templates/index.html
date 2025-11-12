@@ -33,10 +33,12 @@
                 <img src="static/{{ portrait_image }}"
                      alt="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
                      class="radius responsive-image portrait-image"
+                     width="600"
+                     height="900"
                      decoding="async"
                      fetchpriority="high"
                      title="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
-                     style="display: block; max-width: 100%; height: auto; aspect-ratio: auto;">
+                     style="display: block; max-width: 100%; height: auto;">
             </picture>
             {% endif %}
         </div>
