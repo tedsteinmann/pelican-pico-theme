@@ -17,6 +17,6 @@ SITE_IMAGE = site.get('image', '')
 
 HOMEPAGE = data.get('homepage', {})
 SEO = data.get('seo', {})
-SOCIAL = data.get('social', [])
+CALL_TO_ACTION = data.get('call_to_action', [])
 
 RELATIVE_URLS = False
