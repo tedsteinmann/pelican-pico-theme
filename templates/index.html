@@ -2,7 +2,7 @@
 
 {% block content %}
 {% set homepage = HOMEPAGE %}
-{% set social = SOCIAL %}
+{% set call_to_action = CALL_TO_ACTION %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->
@@ -11,12 +11,12 @@
             {% if homepage.subtitle %}<h2 class="secondary">{{ homepage.subtitle }}</h2>{% endif %}
             {% if homepage.summary %}<p>{{ homepage.summary }}</p>{% endif %}
 
-            <!-- Social Media Buttons -->
-            {% if social %}
+            <!-- Call to Action Buttons -->
+            {% if call_to_action %}
             <div class="flex gap-2 mt-1">
-                {% for social_item in social %}
-                    {% set button_class = social_item.button_class or 'secondary' %}
-                    <a href="{{ social_item.url }}" role="button" class="{{ button_class }}" target="_blank" rel="noopener">{{ social_item.name }}</a>
+                {% for call_to_action_item in call_to_action %}
+                    {% set button_class = call_to_action_item.button_class or 'secondary' %}
+                    <a href="{{ call_to_action_item.url }}" role="button" class="{{ button_class }}" target="_blank" rel="noopener">{{ call_to_action_item.name }}</a>
                 {% endfor %}
             </div>
             {% endif %}

@@ -67,7 +67,7 @@ These values populate Pelican configuration variables used throughout the templa
 - `SITE_IMAGE` – fallback portrait image for the homepage
 - `HOMEPAGE` – mapping with `title`, `subtitle`, `summary`, `image`
 - `SEO` – mapping with `og_image` and `twitter_username`
-- `SOCIAL` – list of social links (`name`, `url`, optional `button_class`)
+- `CALL_TO_ACTION` – list of homepage links (`name`, `url`, optional `button_class`)
 - `DEFAULT_LANG` – language code used in the `<html>` tag (defaults to `en`)
 
 If you do not use `site.yml`, define these variables manually in `pelicanconf.py` or `publishconf.py`.
