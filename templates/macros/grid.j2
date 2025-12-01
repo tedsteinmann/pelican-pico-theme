@@ -1,0 +1,35 @@
+{% macro grid(items, columns=3) %}
+<div class="card-grid" style="--card-grid-columns: {{ columns|default(3, true) }};">
+    {% for item in items %}
+    {% set item_link = item.metadata.link or item.url %}
+    {% set item_summary = item.summary or item.metadata.summary %}
+    <article class="card-grid__item">
+        {% if item_link %}
+        <a class="card-grid__link" href="{{ item_link }}">
+            {% if item.metadata.icon %}
+            <span class="card-grid__icon" aria-hidden="true">{{ item.metadata.icon }}</span>
+            {% endif %}
+            <div class="card-grid__body">
+                <h3 class="card-grid__title">{{ item.title }}</h3>
+                {% if item_summary %}
+                <p class="card-grid__summary">{{ item_summary }}</p>
+                {% endif %}
+            </div>
+        </a>
+        {% else %}
+        <div class="card-grid__link">
+            {% if item.metadata.icon %}
+            <span class="card-grid__icon" aria-hidden="true">{{ item.metadata.icon }}</span>
+            {% endif %}
+            <div class="card-grid__body">
+                <h3 class="card-grid__title">{{ item.title }}</h3>
+                {% if item_summary %}
+                <p class="card-grid__summary">{{ item_summary }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </article>
+    {% endfor %}
+</div>
+{% endmacro %}

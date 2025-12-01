@@ -102,6 +102,36 @@ MENUITEMS = [
 # DISPLAY_CATEGORIES_ON_MENU — use whichever combination fits your site.
 ```
 
+## Reusable card grids
+
+You can build responsive card grids from standalone Markdown files. Each card is just a normal Pelican document with a `category` that identifies its grouping:
+
+```markdown
+---
+title: Managed Hosting
+category: service
+summary: Optimized, secure hosting with zero-downtime deploys.
+icon: 🚀
+link: /services/managed-hosting
+---
+
+Optional body content for the card's detail page.
+```
+
+Create a grid page that pulls every card sharing that category. Set the page template to `grid` and (optionally) configure the grid columns. You can override the lookup with `grid_category` if you need to use Pelican's own `category` for something else:
+
+```markdown
+---
+title: Services
+summary: A quick overview of everything we offer.
+template: grid
+grid_category: service
+columns: 3
+---
+```
+
+The grid page automatically collects matching cards from both pages and articles, so adding or removing a service is as simple as adding or deleting a Markdown card file.
+
 ## Social Share Cards
 
 This theme includes built-in support for automatic social media card generation using the [pelican-social-share](https://github.com/tedsteinmann/pelican-social-share) plugin.
