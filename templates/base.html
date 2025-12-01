@@ -144,6 +144,76 @@
         border-top: var(--pico-border-width) solid var(--pico-muted-border-color);
         margin-top: var(--pico-block-spacing-vertical);
     }
+
+    .grid-page {
+        display: grid;
+        gap: var(--pico-block-spacing-vertical);
+    }
+
+    .grid-page__header {
+        display: grid;
+        gap: var(--pico-spacing);
+        margin-bottom: var(--pico-block-spacing-vertical);
+    }
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(var(--card-grid-columns, 3), minmax(0, 1fr));
+        gap: var(--pico-block-spacing-horizontal);
+        align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+        .card-grid {
+            grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        }
+    }
+
+    .card-grid__item {
+        background-color: var(--pico-card-background-color);
+        border: var(--pico-border-width) solid var(--pico-muted-border-color);
+        border-radius: var(--pico-border-radius);
+        box-shadow: var(--card-box-shadow);
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .card-grid__link {
+        display: flex;
+        gap: var(--pico-spacing);
+        color: inherit;
+        padding: var(--pico-block-spacing-horizontal);
+        height: 100%;
+        align-items: flex-start;
+    }
+
+    .card-grid__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 999px;
+        background-color: var(--pico-muted-border-color);
+        color: var(--pico-muted-color);
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .card-grid__body {
+        display: grid;
+        gap: calc(var(--pico-spacing) / 2);
+    }
+
+    .card-grid__title {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .card-grid__summary {
+        margin: 0;
+        color: var(--pico-muted-color);
+    }
     </style>
     {% endblock head %}
 </head>
