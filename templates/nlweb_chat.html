@@ -1,0 +1,48 @@
+{% if NLWEB_CHAT_ENABLED %}
+<!-- NLWeb Chat Widget - Custom Pico-native implementation -->
+<div id="nlweb-chat-container" 
+     class="nlweb-chat-container"
+     data-endpoint="{{ NLWEB_CHAT_ENDPOINT }}"
+     data-site="{{ NLWEB_CHAT_SITE }}"
+     data-placeholder="{{ NLWEB_CHAT_PLACEHOLDER }}"
+     data-storage-key="{{ NLWEB_CHAT_HISTORY_KEY }}">
+    
+    <!-- Chat Messages -->
+    <div class="nlweb-chat-messages nlweb-chat-hidden" role="log" aria-live="polite" aria-label="Chat messages"></div>
+    
+    <!-- Chat Input Form -->
+    <form class="nlweb-chat-form">
+        <div class="nlweb-chat-input-wrapper">
+            <textarea 
+                class="nlweb-chat-input"
+                placeholder="{{ NLWEB_CHAT_PLACEHOLDER }}"
+                rows="1"
+                aria-label="Chat input"
+                required></textarea>
+            <button type="submit" 
+                    class="nlweb-chat-send" 
+                    disabled
+                    aria-label="Send message">
+                Send
+            </button>
+        </div>
+    </form>
+    
+    <!-- Optional: New Chat & History Buttons -->
+    <div class="nlweb-chat-actions" style="display: none;">
+        <button type="button" 
+                class="nlweb-new-chat-btn secondary outline" 
+                aria-label="Start new conversation">
+            New Chat
+        </button>
+        <button type="button" 
+                class="nlweb-history-btn secondary outline" 
+                aria-label="View conversation history">
+            History
+        </button>
+    </div>
+    
+    <!-- History Panel (hidden by default) -->
+    <div class="nlweb-history-panel" aria-label="Conversation history"></div>
+</div>
+{% endif %}

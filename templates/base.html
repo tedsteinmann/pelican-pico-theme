@@ -83,8 +83,8 @@
     <link rel="icon" type="image/x-icon" href="/theme/images/favicon.ico">
     <link rel="preload" href="/theme/css/pico.min.css" as="style">
     <link rel="stylesheet" href="/theme/css/pico.min.css">
-    {% if NLWEB_CHAT_ENABLED and NLWEB_CHAT_CSS_URL %}
-    <link rel="stylesheet" href="{{ NLWEB_CHAT_CSS_URL }}">
+    {% if NLWEB_CHAT_ENABLED %}
+    <link rel="stylesheet" href="/theme/css/nlweb-chat.css">
     {% endif %}
     
     <style>
@@ -217,53 +217,6 @@
         margin: 0;
         color: var(--pico-muted-color);
     }
-        {% if NLWEB_CHAT_ENABLED %}
-        /* NLWeb chat: Pico theme styling for all sections */
-        .nlweb-dropdown-container {
-            background-color: var(--pico-background-color);
-        }
-        .nlweb-dropdown-input,
-        .nlweb-dropdown-input input {
-            background-color: var(--pico-form-element-background-color);
-            color: var(--pico-form-element-color);
-            border-color: var(--pico-border-color);
-        }
-        .nlweb-dropdown-results {
-            background-color: var(--pico-form-element-background-color);
-        }
-        .item-container {
-            background-color: var(--pico-background-color);
-            border-color: var(--pico-border-color);
-        }
-        .nlweb-dropdown-chat-input-container {
-            background-color: var(--pico-form-element-background-color);
-            border-color: var(--pico-border-color);
-        }
-        .nlweb-dropdown-chat-input-wrapper,
-        .nlweb-dropdown-chat-input-box {
-            background-color: var(--pico-form-element-background-color);
-        }
-        .nlweb-dropdown-chat-input,
-        .nlweb-dropdown-chat-input textarea {
-            background-color: var(--pico-form-element-background-color);
-            color: var(--pico-form-element-color);
-            border-color: var(--pico-border-color);
-        }
-        .nlweb-dropdown-response,
-        .nlweb-dropdown-response input {
-            background-color: var(--pico-background-color);
-            color: var(--pico-form-element-color);
-            border-color: var(--pico-border-color);
-        }
-        {% endif %}
-    {% if NLWEB_CHAT_ENABLED and NLWEB_CHAT_STYLE_MODE == "scoped" %}
-    /* NLWeb chat: scoped reset to avoid Pico overrides */
-    .nlweb-dropdown-container,
-    .nlweb-dropdown-container * {
-        all: revert;
-        box-sizing: border-box;
-    }
-    {% endif %}
     </style>
     {% endblock head %}
 </head>
@@ -276,20 +229,10 @@
                 {% block content %}{% endblock %}
             </div>
         </section>
-        {% if NLWEB_CHAT_ENABLED %}
-        <div id="{{ NLWEB_CHAT_CONTAINER_ID }}"></div>
-        <script type="module">
-            import { NLWebDropdownChat } from '{{ NLWEB_CHAT_MODULE_URL }}';
-
-            const chat = new NLWebDropdownChat({
-                containerId: '{{ NLWEB_CHAT_CONTAINER_ID }}',
-                site: '{{ NLWEB_CHAT_SITE }}',
-                placeholder: '{{ NLWEB_CHAT_PLACEHOLDER }}',
-                endpoint: '{{ NLWEB_CHAT_ENDPOINT }}'
-            });
-        </script>
-        {% endif %}
     </main>
     {% include 'footer.html' %}
+    {% if NLWEB_CHAT_ENABLED %}
+    <script type="module" src="/theme/js/nlweb-chat.js"></script>
+    {% endif %}
 </body>
 </html>

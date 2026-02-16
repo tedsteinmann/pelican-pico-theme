@@ -14,6 +14,7 @@ A modern, responsive Pelican theme built with [Pico CSS](https://picocss.com/) -
 - **SEO Optimized**: Proper meta tags and structured data
 - **Category Organization**: Automatic category pages for organizing content
 - **Social Share Integration**: Built-in support for automatic social card generation
+- **NLWeb Chat Widget**: Custom chat interface for Cloudflare NLWeb with streaming SSE responses
 
 ## Installation
 
@@ -221,11 +222,283 @@ The theme's `base.html` uses this priority for social images:
 
 This ensures a smooth transition where you can add taglines gradually while keeping existing social images working.
 
+## NLWeb Chat Integration
+
+This theme includes a custom, Pico-native chat widget that integrates with Cloudflare's NLWeb (Natural Language Web Search) Workers. The implementation is built from scratch to avoid external dependencies and maintain consistent styling with the theme.
+
+### Features
+
+- **Custom UI**: Pure JavaScript implementation with no external widget dependencies
+- **Pico-Native Styling**: Uses only Pico CSS variables for automatic dark/light mode support
+- **Server-Sent Events (SSE)**: Streaming responses for real-time interaction
+- **Conversation Persistence**: Saves chat history to localStorage
+- **Result Filtering**: Automatically cleans URLs and metadata from descriptions
+- **Semantic HTML**: Accessible markup with ARIA attributes
+- **Responsive Design**: Mobile-first with optimized layouts
+
+### Architecture
+
+The chat widget consists of three main components:
+
+1. **nlweb-chat.js** (558 lines) - Custom NLWebChat class with SSE streaming
+2. **nlweb-chat.css** (361 lines) - Pico-native styling using CSS variables
+3. **nlweb_chat.html** (49 lines) - Semantic HTML template with data attributes
+
+### Configuration
+
+Add these settings to your `pelicanconf.py`:
+
+```python
+# NLWeb Chat Configuration
+NLWEB_CHAT_ENABLED = True
+NLWEB_CHAT_ENDPOINT = "https://your-worker.workers.dev"
+NLWEB_CHAT_SITE = "your-site-url"
+NLWEB_CHAT_PLACEHOLDER = "Ask a question about this site..."
+NLWEB_CHAT_HISTORY_KEY = "nlweb_conversations"  # localStorage key
+```
+
+**Configuration Variables:**
+
+- **NLWEB_CHAT_ENABLED** - Toggle chat widget on/off (boolean)
+- **NLWEB_CHAT_ENDPOINT** - Your Cloudflare Worker URL (must end without trailing slash)
+- **NLWEB_CHAT_SITE** - The site domain being indexed/searched
+- **NLWEB_CHAT_PLACEHOLDER** - Input field placeholder text
+- **NLWEB_CHAT_HISTORY_KEY** - localStorage key for conversation persistence
+
+### Template Integration
+
+The chat widget is included in templates via:
+
+```jinja2
+{% include 'nlweb_chat.html' %}
+```
+
+This automatically renders when `NLWEB_CHAT_ENABLED = True`. The widget initializes on DOM ready using data attributes from the configuration.
+
+### Cloudflare Worker Setup
+
+The chat widget requires a Cloudflare Worker with NLWeb capabilities:
+
+1. **Create a Worker** in your Cloudflare dashboard
+2. **Enable NLWeb** (Natural Language Web Search) for the Worker
+3. **Configure the /ask endpoint** to accept POST requests with:
+   ```json
+   {
+     "query": "user question",
+     "site": "your-domain",
+     "mode": "answer"
+   }
+   ```
+
+4. **Enable CORS** for your site domain:
+   ```javascript
+   headers: {
+     'Access-Control-Allow-Origin': 'https://your-site.com',
+     'Access-Control-Allow-Methods': 'POST, OPTIONS',
+     'Access-Control-Allow-Headers': 'Content-Type',
+   }
+   ```
+
+### API Message Types
+
+The widget handles these SSE message types from the `/ask` endpoint:
+
+- **api_version** - API metadata (logged, no UI action)
+- **data_retention** - Data retention notice (logged, no UI action)
+- **sites** - Sites being searched (optionally displayed)
+- **result_batch** / **results** - Search results with URLs, titles, descriptions
+- **answer** / **content** - Streaming answer text (if implemented)
+- **complete** / **done** - End of stream signal
+
+### Result Filtering
+
+The widget automatically cleans result descriptions:
+
+- **Removes YAML frontmatter** (---, description:, title:, etc.)
+- **Strips all URLs** (including AWS S3 signed URLs with access keys)
+- **Removes file paths** (.html, .pdf references)
+- **Truncates to 200 chars** with smart sentence/word boundary detection
+- **Filters short descriptions** (under 20 chars are hidden)
+
+### CSS Customization
+
+The widget uses Pico CSS variables exclusively, so it automatically inherits your theme:
+
+```css
+/* Automatic from Pico variables: */
+--pico-primary           /* User message background */
+--pico-card-background-color  /* Assistant message background */
+--pico-muted-border-color     /* Container borders */
+--pico-muted-color            /* Placeholder and muted text */
+--pico-background-color       /* Messages container background */
+```
+
+**Custom CSS Variables (optional):**
+
+```css
+:root {
+  /* Override chat-specific styles */
+  --nlweb-max-height: 60vh;
+  --nlweb-min-height: 200px;
+  --nlweb-message-max-width: 85%;
+}
+```
+
+### JavaScript API
+
+The `NLWebChat` class is initialized automatically via:
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('nlweb-chat-container');
+  if (container && container.dataset.endpoint) {
+    new NLWebChat({
+      containerId: 'nlweb-chat-container',
+      endpoint: container.dataset.endpoint,
+      site: container.dataset.site,
+      placeholder: container.dataset.placeholder,
+      storageKey: container.dataset.storageKey
+    });
+  }
+});
+```
+
+**Methods:**
+
+- `handleSubmit()` - Process user query submission
+- `streamQuery(query)` - Fetch and stream SSE response from API
+- `handleStreamEvent(data, contentEl, assistantMessage)` - Process message types
+- `addMessage(role, content)` - Add user/assistant message to UI
+- `scrollToMessage(role)` - Smooth scroll to keep user question visible
+- `generateSummaryFromResults(results)` - Create natural language summary
+- `extractCleanDescription(rawDescription)` - Filter and clean result descriptions
+- `startNewConversation()` - Clear chat and start fresh
+- `loadConversations()` / `saveConversations()` - Persist to localStorage
+
+### Conversation Persistence
+
+Chat history is stored in `localStorage` using the configured key (default: `nlweb_conversations`):
+
+```javascript
+{
+  id: "timestamp-string",
+  timestamp: 1234567890,
+  title: "First question snippet...",
+  messages: [
+    { role: "user", content: "Question", timestamp: 1234567890 },
+    { role: "assistant", content: "Answer", results: [...], timestamp: 1234567891 }
+  ]
+}
+```
+
+**Features:**
+- Auto-generates title from first user message (50 char limit)
+- Keeps last 50 conversations
+- Survives browser refresh
+- Per-site storage (via storage key)
+
+### UI Behavior
+
+**Initial State:**
+- Chat messages container is **hidden** until first question
+- Only input form is visible
+- Send button disabled until text entered
+
+**During Interaction:**
+- Messages container reveals on first submit
+- Streaming loading animation (3 pulsing dots)
+- User question stays at top while answer streams
+- Results displayed as clickable cards with titles, descriptions, URLs
+
+**Keyboard Shortcuts:**
+- `Enter` - Submit question
+- `Shift+Enter` - New line in textarea
+- Auto-resize textarea (max 120px height)
+
+### Security Considerations
+
+1. **No API Keys in Client**: All authentication should be handled by Cloudflare Worker
+2. **CORS Protection**: Worker should validate origin headers
+3. **Rate Limiting**: Implement in Worker to prevent abuse
+4. **Content Sanitization**: All user input is escaped via `textContent` (no XSS risk)
+5. **URL Filtering**: AWS S3 signed URLs and access keys are stripped from results
+6. **No eval()**: Pure DOM manipulation, no code execution
+
+### Troubleshooting
+
+#### Chat Widget Not Appearing
+
+1. **Check configuration**: Verify `NLWEB_CHAT_ENABLED = True` in config
+2. **Build site**: Ensure templates are rebuilt after config changes
+3. **Browser console**: Look for "NLWeb Chat: Container not found" error
+4. **Template inclusion**: Verify `{% include 'nlweb_chat.html' %}` exists in your template
+
+#### No Results Returned
+
+1. **Worker endpoint**: Verify URL is correct (no trailing slash)
+2. **CORS headers**: Check browser console for CORS errors
+3. **API response**: Open Network tab and inspect `/ask` POST request
+4. **Site indexing**: Ensure your site is indexed by NLWeb Worker
+5. **Message types**: Check console logs for unknown message types
+
+#### Styling Issues
+
+1. **CSS not loading**: Verify `nlweb-chat.css` is in `static/css/`
+2. **Theme conflicts**: Check for CSS specificity issues with custom styles
+3. **Dark mode**: Pico variables automatically handle dark mode - check browser preference
+4. **Mobile layout**: Test responsive breakpoint at 768px
+
+#### Console Errors
+
+The widget only logs:
+- **console.error()** - For legitimate errors (parsing, network, storage)
+- **console.warn()** - For unknown message types from API
+
+All debug logging has been removed for production. If you need to debug:
+1. Check Network tab for API requests/responses
+2. Verify SSE stream format (data: prefix required)
+3. Use `JSON.parse()` test on raw responses
+
+### Performance Notes
+
+- **No External Dependencies**: Zero npm packages, CDN calls, or third-party scripts
+- **Lazy Initialization**: Widget only initializes when container found
+- **Efficient Rendering**: Uses DocumentFragment for batch DOM updates
+- **Debounced Scroll**: `requestAnimationFrame` for smooth scrolling
+- **Smart Caching**: localStorage limits to 50 conversations
+- **Minimal CSS**: 361 lines, ~8KB unminified
+
+### Accessibility
+
+- **ARIA Labels**: All interactive elements properly labeled
+- **Keyboard Navigation**: Full keyboard support (no mouse required)
+- **Screen Readers**: Live region announces new messages (`aria-live="polite"`)
+- **Semantic HTML**: Proper heading hierarchy and landmarks
+- **Focus Management**: Form elements maintain logical focus order
+- **Color Contrast**: Inherits Pico's WCAG AA compliant colors
+
+### Browser Compatibility
+
+Requires modern browser with:
+- ES6 JavaScript (class syntax, async/await, arrow functions)
+- Fetch API with streaming
+- ReadableStream and TextDecoder
+- CSS Grid and CSS variables
+- localStorage
+
+**Supported:**
+- Chrome 60+
+- Firefox 60+
+- Safari 12+
+- Edge 79+
+
 ## Quick Start
 
 1. Install the theme
 2. Create `site.yml` and update your `pelicanconf.py` with the configuration above
-3. Create content structure:
+3. (Optional) Configure NLWeb Chat by adding required settings to `pelicanconf.py`
+4. (Optional) Install and configure pelican-social-share plugin for social cards
+5. Create content structure:
    ```
    content/
    ├── index.md          # Provides homepage content (not in navigation)
@@ -233,7 +506,7 @@ This ensures a smooth transition where you can add taglines gradually while keep
    └── articles/
        └── first-post.md # category: blog → "Blog" in navigation
    ```
-4. Build your site: `pelican content`
+6. Build your site: `pelican content`
 
 ## Navigation
 
@@ -311,6 +584,7 @@ This theme includes the following standard Pelican templates:
 - `tag.html` - Tag archive template
 - `author.html` - Author archive template
 - `social_card.html` - Social media card template (for pelican-social-share plugin)
+- `nlweb_chat.html` - NLWeb chat widget template (for Cloudflare NLWeb integration)
 
 ### Navigation Template
 
@@ -329,6 +603,8 @@ Category pages are automatically generated by Pelican when you have published ar
 The theme includes:
 - `static/css/pico.min.css` - Pico CSS framework
 - `static/css/style.css` - Custom theme styles
+- `static/css/nlweb-chat.css` - NLWeb chat widget styles (Pico-native)
+- `static/js/nlweb-chat.js` - NLWeb chat widget functionality
 - `static/images/favicon.ico` - Default favicon
 
 ### Custom Styles
@@ -432,7 +708,8 @@ Project description and details.
 
 - Pelican 4.0+
 - Python 3.6+
-- Playwright (for social card generation)
+- Playwright (optional, for social card generation with pelican-social-share plugin)
+- Cloudflare Worker with NLWeb (optional, for chat widget functionality)
 
 ## Browser Support
 
