@@ -5,7 +5,8 @@
      data-endpoint="{{ NLWEB_CHAT_ENDPOINT }}"
      data-site="{{ NLWEB_CHAT_SITE }}"
      data-placeholder="{{ NLWEB_CHAT_PLACEHOLDER }}"
-     data-storage-key="{{ NLWEB_CHAT_HISTORY_KEY }}">
+     data-storage-key="{{ NLWEB_CHAT_HISTORY_KEY }}"
+     data-fallback-results='{{ NLWEB_CHAT.fallback_results | tojson }}'>
     
     <!-- Chat Messages -->
     <div class="nlweb-chat-messages nlweb-chat-hidden" role="log" aria-live="polite" aria-label="Chat messages"></div>

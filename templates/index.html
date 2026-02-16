@@ -13,7 +13,7 @@
 
             <!-- Call to Action Buttons -->
             {% if call_to_action %}
-            <div class="flex gap-2 mt-1">
+            <div class="flex gap-2 mt-1" style="margin-bottom: 2rem;">
                 {% for call_to_action_item in call_to_action %}
                     {% set button_class = call_to_action_item.button_class or 'secondary' %}
                     <a href="{{ call_to_action_item.url }}" role="button" class="{{ button_class }}" target="_blank" rel="noopener">{{ call_to_action_item.name }}</a>

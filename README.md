@@ -255,6 +255,8 @@ NLWEB_CHAT_ENDPOINT = "https://your-worker.workers.dev"
 NLWEB_CHAT_SITE = "your-site-url"
 NLWEB_CHAT_PLACEHOLDER = "Ask a question about this site..."
 NLWEB_CHAT_HISTORY_KEY = "nlweb_conversations"  # localStorage key
+NLWEB_CHAT_AI_MODE = True  # Enable AI-generated responses
+NLWEB_CHAT_AI_BINDING = "AI"  # Name of your Workers AI binding
 ```
 
 **Configuration Variables:**
@@ -264,6 +266,8 @@ NLWEB_CHAT_HISTORY_KEY = "nlweb_conversations"  # localStorage key
 - **NLWEB_CHAT_SITE** - The site domain being indexed/searched
 - **NLWEB_CHAT_PLACEHOLDER** - Input field placeholder text
 - **NLWEB_CHAT_HISTORY_KEY** - localStorage key for conversation persistence
+- **NLWEB_CHAT_AI_MODE** - Enable AI-generated responses (default: False)
+- **NLWEB_CHAT_AI_BINDING** - Name of Workers AI binding in your Worker (default: "AI")
 
 ### Template Integration
 

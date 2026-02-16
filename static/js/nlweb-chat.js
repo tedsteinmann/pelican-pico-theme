@@ -11,6 +11,7 @@ class NLWebChat {
         this.placeholder = config.placeholder || 'Ask a question...';
         this.containerId = config.containerId || 'nlweb-chat-container';
         this.storageKey = config.storageKey || 'nlweb_conversations';
+        this.fallbackResults = config.fallbackResults || [];
         
         this.currentConversation = null;
         this.conversations = this.loadConversations();
@@ -144,7 +145,7 @@ class NLWebChat {
                 body: JSON.stringify({
                     query: query,
                     site: this.site,
-                    mode: 'answer'
+                    fallback_results: this.fallbackResults
                 })
             });
 
@@ -262,9 +263,16 @@ class NLWebChat {
                 if (data.content) {
                     let answerEl = contentEl.querySelector('.nlweb-answer-text');
                     if (!answerEl) {
+                        // Remove loading indicator
+                        const loadingEl = contentEl.querySelector('.nlweb-loading');
+                        if (loadingEl) {
+                            loadingEl.remove();
+                        }
+                        
+                        // Create answer element at the beginning
                         answerEl = document.createElement('div');
                         answerEl.className = 'nlweb-answer-text';
-                        contentEl.appendChild(answerEl);
+                        contentEl.insertBefore(answerEl, contentEl.firstChild);
                     }
                     
                     assistantMessage.content += data.content;
@@ -410,10 +418,14 @@ class NLWebChat {
     generateSummaryFromResults(results) {
         if (!results || results.length === 0) return '';
 
-        // Build a simple summary
-        let summary = `I found ${results.length} relevant page${results.length !== 1 ? 's' : ''} that may help answer your question.`;
-
-        return summary;
+        // Build a simple summary (only used when AI mode is disabled)
+        if (!this.aiMode) {
+            let summary = `I found ${results.length} relevant page${results.length !== 1 ? 's' : ''} that may help answer your question.`;
+            return summary;
+        }
+        
+        // In AI mode, don't generate client-side summary - wait for AI response
+        return '';
     }
 
     createMessageElement(role) {
@@ -546,12 +558,23 @@ class NLWebChat {
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('nlweb-chat-container');
     if (container && container.dataset.endpoint) {
+        // Parse fallback results JSON
+        let fallbackResults = [];
+        try {
+            if (container.dataset.fallbackResults) {
+                fallbackResults = JSON.parse(container.dataset.fallbackResults);
+            }
+        } catch (e) {
+            console.warn('Failed to parse fallback results:', e);
+        }
+        
         new NLWebChat({
             containerId: 'nlweb-chat-container',
             endpoint: container.dataset.endpoint,
             site: container.dataset.site,
             placeholder: container.dataset.placeholder,
-            storageKey: container.dataset.storageKey || 'nlweb_conversations'
+            storageKey: container.dataset.storageKey || 'nlweb_conversations',
+            fallbackResults: fallbackResults
         });
     }
 });
