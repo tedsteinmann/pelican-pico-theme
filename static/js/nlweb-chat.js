@@ -193,6 +193,24 @@ class NLWebChat {
         }
     }
 
+    stripMarkdown(text) {
+        if (!text) return '';
+        return text
+            .replace(/<[^>]*>/g, '')                 // HTML tags
+            .replace(/\*\*(.*?)\*\*/g, '$1')         // Bold
+            .replace(/__(.+?)__/g, '$1')             // Bold (alt)
+            .replace(/\*(.*?)\*/g, '$1')             // Italic
+            .replace(/_(.+?)_/g, '$1')               // Italic (alt)
+            .replace(/\[(.*?)\]\(.*?\)/g, '$1')      // Links
+            .replace(/^#{1,6}\s/gm, '')              // Headings
+            .replace(/`(.*?)`/g, '$1')               // Inline code
+            .replace(/```[\s\S]*?```/g, '')          // Code blocks
+            .replace(/^>\s/gm, '')                   // Blockquotes
+            .replace(/^\s*[-*+]\s/gm, '')            // Bullet points
+            .replace(/^\d+\.\s/gm, '')               // Numbered lists
+            .replace(/\n\n+/g, '\n\n');              // Extra newlines
+    }
+
     handleStreamEvent(data, contentEl, assistantMessage) {
         const messageType = data.message_type;
 
@@ -276,7 +294,8 @@ class NLWebChat {
                     }
                     
                     assistantMessage.content += data.content;
-                    answerEl.textContent = assistantMessage.content;
+                    // Strip markdown formatting before displaying
+                    answerEl.textContent = this.stripMarkdown(assistantMessage.content);
                 }
                 break;
 
@@ -369,35 +388,9 @@ class NLWebChat {
     extractCleanDescription(rawDescription) {
         if (!rawDescription) return '';
 
-        let cleaned = rawDescription;
-
-        // Remove complete YAML frontmatter blocks (everything between --- markers)
-        cleaned = cleaned.replace(/^---[\s\S]*?---\s*/m, '');
+        let cleaned = rawDescription.trim();
         
-        // Remove any remaining YAML-style field markers (more aggressive)
-        cleaned = cleaned.replace(/^\s*---\s*/gm, '');
-        cleaned = cleaned.replace(/\s*description:\s*/gi, '');
-        cleaned = cleaned.replace(/\s*title:\s*/gi, ' ');
-        cleaned = cleaned.replace(/\s*image:\s*https?:\/\/[^\s]+/gi, '');
-        cleaned = cleaned.replace(/\s*keywords:\s*/gi, '');
-        cleaned = cleaned.replace(/\s*author:\s*/gi, '');
-        cleaned = cleaned.replace(/\s*tags:\s*/gi, '');
-        cleaned = cleaned.replace(/\s*date:\s*/gi, '');
-        
-        // Remove any URLs (including AWS S3 signed URLs with access keys)
-        cleaned = cleaned.replace(/https?:\/\/[^\s]+/gi, '');
-        
-        // Remove common path patterns that aren't meaningful
-        cleaned = cleaned.replace(/\/[a-zA-Z0-9_\-\/]+\.html/g, '');
-        cleaned = cleaned.replace(/\/[a-zA-Z0-9_\-\/]+\.pdf/g, '');
-        
-        // Clean up multiple spaces and newlines
-        cleaned = cleaned.replace(/\s+/g, ' ').trim();
-        
-        // If cleaned text is too short or meaningless, return empty
-        if (cleaned.length < 20) return '';
-
-        // Truncate to reasonable length
+        // Truncate to reasonable length if needed
         if (cleaned.length > 200) {
             cleaned = cleaned.substring(0, 200).trim();
             // Try to break at a sentence or word boundary
@@ -416,15 +409,7 @@ class NLWebChat {
     }
 
     generateSummaryFromResults(results) {
-        if (!results || results.length === 0) return '';
-
-        // Build a simple summary (only used when AI mode is disabled)
-        if (!this.aiMode) {
-            let summary = `I found ${results.length} relevant page${results.length !== 1 ? 's' : ''} that may help answer your question.`;
-            return summary;
-        }
-        
-        // In AI mode, don't generate client-side summary - wait for AI response
+        // Don't generate any client-side summary - let the AI/search handle it
         return '';
     }
 
