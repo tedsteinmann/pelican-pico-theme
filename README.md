@@ -13,7 +13,6 @@ A modern, responsive Pelican theme built with [Pico CSS](https://picocss.com/) -
 - **Clean Typography**: Beautiful, readable fonts and spacing
 - **SEO Optimized**: Proper meta tags and structured data
 - **Category Organization**: Automatic category pages for organizing content
-- **Social Share Integration**: Built-in support for automatic social card generation
 - **NLWeb Chat Widget**: Custom chat interface for Cloudflare NLWeb with streaming SSE responses
 
 ## Installation
@@ -49,7 +48,7 @@ homepage:
   image: static/portrait.webp
 
 seo:
-  og_image: static/social-card.jpg
+  og_image: static/og-image.jpg
   twitter_username: yourhandle
 
 social:
@@ -63,7 +62,7 @@ These values populate Pelican configuration variables used throughout the templa
 
 - `SITENAME` – site name shown in navigation and metadata
 - `AUTHOR` – author meta tag and homepage fallback
-- `SITEURL` – canonical site URL for links and social cards
+- `SITEURL` – canonical site URL for links
 - `DESCRIPTION` – default description for meta and social tags
 - `SITE_IMAGE` – fallback portrait image for the homepage
 - `HOMEPAGE` – mapping with `title`, `subtitle`, `summary`, `image`
@@ -102,125 +101,6 @@ MENUITEMS = [
 # page/category menus controlled by DISPLAY_PAGES_ON_MENU and
 # DISPLAY_CATEGORIES_ON_MENU — use whichever combination fits your site.
 ```
-
-## Reusable card grids
-
-You can build responsive card grids from standalone Markdown files. Each card is just a normal Pelican document with a `category` that identifies its grouping:
-
-```markdown
----
-title: Managed Hosting
-category: service
-summary: Optimized, secure hosting with zero-downtime deploys.
-icon: 🚀
-link: /services/managed-hosting
----
-
-Optional body content for the card's detail page.
-```
-
-Create a grid page that pulls every card sharing that category. Set the page template to `grid` and (optionally) configure the grid columns. You can override the lookup with `grid_category` if you need to use Pelican's own `category` for something else:
-
-```markdown
----
-title: Services
-summary: A quick overview of everything we offer.
-template: grid
-grid_category: service
-columns: 3
----
-```
-
-The grid page automatically collects matching cards from both pages and articles, so adding or removing a service is as simple as adding or deleting a Markdown card file.
-
-## Social Share Cards
-
-This theme includes built-in support for automatic social media card generation using the [pelican-social-share](https://github.com/tedsteinmann/pelican-social-share) plugin.
-
-### Setup
-
-1. **Install the plugin**:
-   ```bash
-   # Add as submodule
-   git submodule add https://github.com/tedsteinmann/pelican-social-share.git plugins/pelican-social-share
-   
-   # Install Playwright for screenshot generation
-   pip install playwright
-   playwright install chromium
-   ```
-
-2. **Configure in `pelicanconf.py`**:
-   ```python
-   PLUGINS = [
-       'social_share',  # Add to your existing plugins
-       # ... other plugins
-   ]
-
-   # Social Share Plugin Settings
-   SOCIAL_TEMPLATE_NAME = "social_card.html"
-   SOCIAL_PORTRAIT_PATH = "content/static/images/portrait.jpg"
-   SOCIAL_SCOPE = "articles"  # "articles", "pages", or "both"
-   
-   # Optional performance settings
-   SOCIAL_HASH_SKIP = True  # Skip unchanged content
-   SOCIAL_DISABLE_SCREENSHOT = False  # Set True for faster dev builds
-   ```
-
-3. **Add taglines to your content**:
-   ```markdown
-   ---
-   title: My Amazing Article
-   date: 2025-01-01
-   category: blog
-   tagline: This compelling tagline will appear on social cards
-   ---
-   
-   Your article content here...
-   ```
-
-### How It Works
-
-The plugin automatically:
-1. **Generates HTML cards** using the theme's `social_card.html` template for any content with a `tagline` field
-2. **Creates PNG images** (1200×675) via browser screenshot for social sharing
-3. **Sets metadata** so the theme automatically uses generated images in Open Graph and Twitter meta tags
-4. **Provides fallbacks** to your existing SEO images when no tagline is present
-
-### Social Card Template
-
-The theme includes a `social_card.html` template that creates beautiful, branded social cards using your existing theme styles:
-
-- **Left side**: Large, bold tagline text using theme typography
-- **Right side**: Portrait image (configurable via `SOCIAL_PORTRAIT_PATH`)
-- **Footer**: Site name for branding
-- **Consistent styling**: Uses Pico CSS variables for colors and spacing
-
-### Generated Files
-
-For each article with a `tagline`, the plugin creates:
-- `content/social/{slug}.html` - The social card HTML (versioned with your content)
-- `content/static/images/social/{slug}.png` - The final social share image
-
-### Development Workflow
-
-**For theme development** (faster builds):
-```python
-SOCIAL_DISABLE_SCREENSHOT = True  # Skip PNG generation
-```
-
-**For content development** (automatic regeneration):
-```python
-SOCIAL_HASH_SKIP = True  # Only regenerate when taglines change
-```
-
-### Metadata Priority
-
-The theme's `base.html` uses this priority for social images:
-1. **Plugin-generated images** (`article.metadata.social_image`) - 1200×675 PNG
-2. **Manual article images** (`article.og_image`) - Your existing setup
-3. **Global fallback** (`SEO.og_image`) - Site-wide default
-
-This ensures a smooth transition where you can add taglines gradually while keeping existing social images working.
 
 ## NLWeb Chat Integration
 
@@ -501,7 +381,6 @@ Requires modern browser with:
 1. Install the theme
 2. Create `site.yml` and update your `pelicanconf.py` with the configuration above
 3. (Optional) Configure NLWeb Chat by adding required settings to `pelicanconf.py`
-4. (Optional) Install and configure pelican-social-share plugin for social cards
 5. Create content structure:
    ```
    content/
@@ -549,11 +428,9 @@ content/
 │   ├── blog-post-2.md   # category: blog
 │   ├── presentation-1.md # category: presentation → "Presentation" in navigation
 │   └── presentation-2.md # category: presentation
-├── social/               # Generated social card HTML (auto-created)
 └── static/              
     ├── images/
-    │   ├── portrait.jpg  # Your portrait for social cards
-    │   └── social/       # Generated social share PNGs (auto-created)
+    │   ├── portrait.jpg
     └── ...               # Other static files
 ```
 
@@ -567,7 +444,6 @@ title: My Blog Post
 date: 2025-01-01
 status: published
 category: blog
-tagline: Compelling social media description  # Optional: generates social card
 tags:
   - example
 summary: Brief description
@@ -587,7 +463,6 @@ This theme includes the following standard Pelican templates:
 - `category.html` - Category listing template (automatically generated)
 - `tag.html` - Tag archive template
 - `author.html` - Author archive template
-- `social_card.html` - Social media card template (for pelican-social-share plugin)
 - `nlweb_chat.html` - NLWeb chat widget template (for Cloudflare NLWeb integration)
 
 ### Navigation Template
@@ -606,14 +481,14 @@ Category pages are automatically generated by Pelican when you have published ar
 
 The theme includes:
 - `static/css/pico.min.css` - Pico CSS framework
-- `static/css/style.css` - Custom theme styles
+- `static/css/theme.css` - Custom theme styles
 - `static/css/nlweb-chat.css` - NLWeb chat widget styles (Pico-native)
 - `static/js/nlweb-chat.js` - NLWeb chat widget functionality
 - `static/images/favicon.ico` - Default favicon
 
 ### Custom Styles
 
-To customize the appearance, modify `static/css/style.css` or add your own CSS files.
+To customize the appearance, modify `static/css/theme.css` or add your own CSS files.
 
 ### Images
 
@@ -646,16 +521,6 @@ If pages aren't showing in navigation:
 2. **Metadata**: Pages need a `title` field
 3. **Configuration**: Ensure `DISPLAY_PAGES_ON_MENU = True`
 
-### Social Cards Not Generating
-
-If social cards aren't being created:
-
-1. **Tagline Required**: Articles must have a `tagline` field in metadata
-2. **Plugin Installation**: Ensure pelican-social-share is installed and in `PLUGINS`
-3. **Playwright Setup**: Run `playwright install chromium` after installing
-4. **Template Exists**: Verify `social_card.html` template exists in your theme
-5. **Portrait Path**: Check that `SOCIAL_PORTRAIT_PATH` points to an existing image
-
 ## Portfolio Usage
 
 This theme is optimized for portfolio sites. Structure your content as:
@@ -680,7 +545,6 @@ title: My Latest Thoughts
 date: 2025-01-01
 status: published
 category: blog
-tagline: Insightful thoughts on the latest trends
 tags:
   - thoughts
   - update
@@ -697,7 +561,6 @@ title: Amazing Project
 date: 2025-01-01
 status: published
 category: portfolio
-tagline: Innovative solution built with modern technology
 tags:
   - web-development
   - design
@@ -712,7 +575,6 @@ Project description and details.
 
 - Pelican 4.0+
 - Python 3.6+
-- Playwright (optional, for social card generation with pelican-social-share plugin)
 - Cloudflare Worker with NLWeb (optional, for chat widget functionality)
 
 ## Browser Support

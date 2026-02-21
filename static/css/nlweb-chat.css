@@ -30,6 +30,10 @@
     gap: calc(var(--pico-spacing) / 2);
 }
 
+.nlweb-chat-actions-hidden {
+    display: none;
+}
+
 .nlweb-new-chat-btn,
 .nlweb-history-btn {
     padding: calc(var(--pico-spacing) / 2) var(--pico-spacing);
