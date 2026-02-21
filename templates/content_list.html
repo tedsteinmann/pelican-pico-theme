@@ -25,7 +25,7 @@
     <!-- Loop through grouped articles -->
     {% for category, category_articles in grouped_articles.items() %}
         <h3>{{ category|capitalize }}</h3>
-        <ul style="list-style: none; padding: 0;">
+        <ul class="article-list-unstyled">
             {% for article in category_articles %}
                 {% include "article_item.html" %}
             {% endfor %}
@@ -33,7 +33,7 @@
     {% endfor %}
 {% else %}
     <!-- Standard chronological list (typically for blog posts) -->
-    <ul style="list-style: none; padding: 0;">
+    <ul class="article-list-unstyled">
     {% for article in articles|sort(attribute="date", reverse=True) %}
         {% if article.relative_source_path.startswith(section_name + "/") %}
             {% include "article_item.html" %}

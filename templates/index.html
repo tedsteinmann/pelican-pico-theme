@@ -13,7 +13,7 @@
 
             <!-- Call to Action Buttons -->
             {% if call_to_action %}
-            <div class="flex gap-2 mt-1" style="margin-bottom: 2rem;">
+            <div class="flex gap-2 mt-1 homepage-cta">
                 {% for call_to_action_item in call_to_action %}
                     {% set button_class = call_to_action_item.button_class or 'secondary' %}
                     <a href="{{ call_to_action_item.url }}" role="button" class="{{ button_class }}" target="_blank" rel="noopener">{{ call_to_action_item.name }}</a>
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Image Content -->
-        <div style="display: flex; align-items: flex-end;">
+        <div class="homepage-image-wrap">
             {% set portrait_image = homepage.image or SITE_IMAGE %}
             {% if portrait_image %}
             <picture>
@@ -37,11 +37,10 @@
                 <source srcset="static/{{ portrait_image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
                 <img src="static/{{ portrait_image }}"
                      alt="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
-                     class="radius responsive-image portrait-image"
                      decoding="async"
                      fetchpriority="high"
                      title="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
-                     style="display: block; max-width: 100%; height: auto; aspect-ratio: auto;">
+                     class="radius responsive-image portrait-image homepage-portrait">
             </picture>
             {% endif %}
         </div>
