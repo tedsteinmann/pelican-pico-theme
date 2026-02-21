@@ -52,8 +52,8 @@ h1 {
 }
 
 .dropdown ul {
-    border: 1px solid var(--muted-border-color);
-    box-shadow: var(--card-box-shadow);
+    border: 1px solid var(--pico-muted-border-color);
+    box-shadow: var(--pico-dropdown-box-shadow);
 }
 
 footer {
