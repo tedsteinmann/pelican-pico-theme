@@ -10,6 +10,7 @@
     gap: var(--pico-spacing);
     width: 100%;
     max-width: 100%;
+    position: relative;
     box-sizing: border-box;
 }
 
@@ -28,6 +29,7 @@
 .nlweb-chat-actions {
     display: flex;
     gap: calc(var(--pico-spacing) / 2);
+    flex-wrap: wrap;
 }
 
 .nlweb-chat-actions-hidden {
@@ -291,52 +293,105 @@
     font-style: italic;
 }
 
-/* History Panel (Optional Feature) */
+/* History Panel (Inline Accordion) */
 .nlweb-history-panel {
     display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: calc(var(--pico-spacing) / 2);
-    width: 300px;
-    max-height: 400px;
+    margin-top: calc(var(--pico-spacing) / 4);
+    max-height: 45vh;
     overflow-y: auto;
     background-color: var(--pico-card-background-color);
     border: var(--pico-border-width) solid var(--pico-muted-border-color);
     border-radius: var(--pico-border-radius);
-    box-shadow: var(--pico-card-box-shadow);
     padding: var(--pico-spacing);
-    z-index: 10;
 }
 
 .nlweb-history-panel.show {
     display: block;
 }
 
-.nlweb-history-item {
-    padding: calc(var(--pico-spacing) / 2);
-    margin-bottom: calc(var(--pico-spacing) / 4);
-    border-radius: var(--pico-border-radius);
-    cursor: pointer;
-    transition: background-color 0.2s;
+.nlweb-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--pico-spacing) / 2);
 }
 
-.nlweb-history-item:hover {
+.nlweb-history-empty {
+    margin: 0;
+    color: var(--pico-muted-color);
+    font-size: 0.875rem;
+}
+
+.nlweb-history-section {
+    border: var(--pico-border-width) solid var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
+    background-color: var(--pico-background-color);
+}
+
+.nlweb-history-section[open] {
     background-color: var(--pico-muted-background-color);
 }
 
-.nlweb-history-item-title {
+.nlweb-history-summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: calc(var(--pico-spacing) / 2);
+    padding: calc(var(--pico-spacing) / 2) calc(var(--pico-spacing) * 0.75);
+    cursor: pointer;
+}
+
+.nlweb-history-summary::-webkit-details-marker {
+    display: none;
+}
+
+.nlweb-history-summary:hover {
+    background-color: var(--pico-muted-background-color);
+}
+
+.nlweb-history-summary.is-active {
+    background-color: var(--pico-muted-background-color);
+}
+
+.nlweb-history-title {
     font-size: 0.875rem;
     color: var(--pico-color);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1 1 auto;
 }
 
-.nlweb-history-item-date {
+.nlweb-history-date {
     font-size: 0.75rem;
     color: var(--pico-muted-color);
-    margin-top: calc(var(--pico-spacing) / 4);
+    white-space: nowrap;
+}
+
+.nlweb-history-content {
+    padding: 0 calc(var(--pico-spacing) * 0.75) calc(var(--pico-spacing) * 0.75);
+}
+
+.nlweb-history-meta {
+    margin: 0 0 calc(var(--pico-spacing) / 2);
+    color: var(--pico-muted-color);
+    font-size: 0.75rem;
+}
+
+.nlweb-history-preview {
+    margin: 0 0 calc(var(--pico-spacing) / 2);
+    font-size: 0.875rem;
+    color: var(--pico-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.nlweb-history-load {
+    margin: 0;
+    padding: calc(var(--pico-spacing) / 4) calc(var(--pico-spacing) / 2);
+    font-size: 0.75rem;
 }
 
 /* Responsive Design */
@@ -349,10 +404,8 @@
         max-height: 50vh;
     }
 
-    .nlweb-history-panel {
-        width: 100%;
-        left: 0;
-        right: 0;
+    .nlweb-history-date {
+        display: none;
     }
 }
 

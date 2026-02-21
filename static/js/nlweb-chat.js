@@ -28,6 +28,7 @@ class NLWebChat {
         }
 
         this.setupEventListeners();
+        this.renderHistoryPanel();
         this.startNewConversation();
     }
 
@@ -51,12 +52,21 @@ class NLWebChat {
                 if (sendBtn) {
                     sendBtn.disabled = !input.value.trim();
                 }
+                if (input.value.trim()) {
+                    this.hideHistoryPanel();
+                }
             });
 
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     this.handleSubmit();
+                }
+            });
+
+            input.addEventListener('focus', () => {
+                if (input.value.trim()) {
+                    this.hideHistoryPanel();
                 }
             });
         }
@@ -68,6 +78,18 @@ class NLWebChat {
         if (historyBtn) {
             historyBtn.addEventListener('click', () => this.toggleHistory());
         }
+
+        document.addEventListener('click', (e) => {
+            if (!this.container.contains(e.target)) {
+                this.hideHistoryPanel();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.hideHistoryPanel();
+            }
+        });
     }
 
     adjustInputHeight(input) {
@@ -80,6 +102,8 @@ class NLWebChat {
         const query = input.value.trim();
 
         if (!query || this.isStreaming) return;
+
+        this.hideHistoryPanel();
 
         input.value = '';
         input.style.height = 'auto';
@@ -343,7 +367,11 @@ class NLWebChat {
             const urlLink = document.createElement('small');
             const urlA = document.createElement('a');
             urlA.href = result.url;
-            urlA.textContent = new URL(result.url).pathname;
+            try {
+                urlA.textContent = new URL(result.url).pathname || result.url;
+            } catch (e) {
+                urlA.textContent = result.url;
+            }
             urlA.target = '_blank';
             urlA.rel = 'noopener';
             urlLink.appendChild(urlA);
@@ -443,6 +471,89 @@ class NLWebChat {
         messagesContainer.appendChild(messageEl);
     }
 
+    renderStoredAssistantMessage(message) {
+        const messageEl = this.createMessageElement('assistant');
+        const contentEl = messageEl.querySelector('.nlweb-message-content');
+        const hasContent = Boolean(message.content);
+        const hasResults = Array.isArray(message.results) && message.results.length > 0;
+
+        if (hasContent) {
+            const answerEl = document.createElement('div');
+            answerEl.className = 'nlweb-answer-text';
+            answerEl.textContent = this.stripMarkdown(message.content);
+            contentEl.appendChild(answerEl);
+        }
+
+        if (hasResults) {
+            if (hasContent) {
+                const separator = document.createElement('hr');
+                separator.style.margin = 'var(--pico-spacing) 0';
+                separator.style.border = 'none';
+                separator.style.borderTop = '1px solid var(--pico-muted-border-color)';
+                contentEl.appendChild(separator);
+            }
+
+            const resultsLabel = document.createElement('small');
+            resultsLabel.className = 'nlweb-results-label';
+            resultsLabel.textContent = `Found ${message.results.length} relevant page${message.results.length !== 1 ? 's' : ''}:`;
+            resultsLabel.style.display = 'block';
+            resultsLabel.style.marginBottom = 'calc(var(--pico-spacing) / 2)';
+            resultsLabel.style.color = 'var(--pico-muted-color)';
+            contentEl.appendChild(resultsLabel);
+
+            const resultsContainer = document.createElement('div');
+            resultsContainer.className = 'nlweb-results-container';
+
+            message.results.forEach(result => {
+                const resultEl = this.createResultElement(result);
+                resultsContainer.appendChild(resultEl);
+            });
+
+            contentEl.appendChild(resultsContainer);
+        }
+
+        if (!hasContent && !hasResults) {
+            const noResultsEl = document.createElement('p');
+            noResultsEl.className = 'nlweb-no-results';
+            noResultsEl.textContent = 'No results found for this query.';
+            contentEl.appendChild(noResultsEl);
+        }
+
+        return messageEl;
+    }
+
+    renderConversationMessages(conversation) {
+        const messagesContainer = this.container.querySelector('.nlweb-chat-messages');
+        if (!messagesContainer) return;
+
+        messagesContainer.innerHTML = '';
+        const messages = Array.isArray(conversation.messages) ? conversation.messages : [];
+        if (messages.length === 0) {
+            messagesContainer.classList.add('nlweb-chat-hidden');
+            return;
+        }
+
+        messagesContainer.classList.remove('nlweb-chat-hidden');
+
+        messages.forEach((message) => {
+            if (message.role === 'assistant') {
+                const assistantMessageEl = this.renderStoredAssistantMessage(message);
+                messagesContainer.appendChild(assistantMessageEl);
+                return;
+            }
+
+            const messageEl = this.createMessageElement('user');
+            const contentEl = messageEl.querySelector('.nlweb-message-content');
+            const textEl = document.createElement('div');
+            textEl.className = 'nlweb-message-text';
+            textEl.textContent = message.content || '';
+            contentEl.appendChild(textEl);
+            messagesContainer.appendChild(messageEl);
+        });
+
+        messagesContainer.scrollTop = 0;
+    }
+
     scrollToMessage(role) {
         const messagesContainer = this.container.querySelector('.nlweb-chat-messages');
         if (!messagesContainer) return;
@@ -484,24 +595,190 @@ class NLWebChat {
             messagesContainer.classList.add('nlweb-chat-hidden');
         }
 
+        this.hideHistoryPanel();
+
         // Focus input
         const input = this.container.querySelector('.nlweb-chat-input');
         if (input) {
+            input.value = '';
+            input.style.height = 'auto';
             input.focus();
+        }
+
+        const sendBtn = this.container.querySelector('.nlweb-chat-send');
+        if (sendBtn) {
+            sendBtn.disabled = true;
+        }
+
+        this.renderHistoryPanel();
+    }
+
+    hideHistoryPanel() {
+        const historyPanel = this.container.querySelector('.nlweb-history-panel');
+        if (historyPanel) {
+            historyPanel.classList.remove('show');
         }
     }
 
     toggleHistory() {
         const historyPanel = this.container.querySelector('.nlweb-history-panel');
-        if (historyPanel) {
-            historyPanel.classList.toggle('show');
+        if (!historyPanel) return;
+
+        const input = this.container.querySelector('.nlweb-chat-input');
+        if (input && input.value.trim()) {
+            this.hideHistoryPanel();
+            return;
         }
+
+        const shouldShow = !historyPanel.classList.contains('show');
+        if (shouldShow) {
+            this.renderHistoryPanel();
+            historyPanel.classList.add('show');
+        } else {
+            historyPanel.classList.remove('show');
+        }
+    }
+
+    renderHistoryPanel() {
+        const historyPanel = this.container.querySelector('.nlweb-history-panel');
+        if (!historyPanel) return;
+
+        historyPanel.innerHTML = '';
+
+        const validConversations = this.conversations.filter(conversation =>
+            Array.isArray(conversation.messages) && conversation.messages.length > 0
+        );
+
+        if (validConversations.length === 0) {
+            const emptyState = document.createElement('p');
+            emptyState.className = 'nlweb-history-empty';
+            emptyState.textContent = 'No previous conversations yet.';
+            historyPanel.appendChild(emptyState);
+            return;
+        }
+
+        const list = document.createElement('div');
+        list.className = 'nlweb-history-list';
+
+        validConversations.forEach((conversation) => {
+            const section = document.createElement('details');
+            section.className = 'nlweb-history-section';
+
+            const summary = document.createElement('summary');
+            summary.className = 'nlweb-history-summary';
+            if (this.currentConversation && conversation.id === this.currentConversation.id) {
+                summary.classList.add('is-active');
+            }
+
+            const title = document.createElement('div');
+            title.className = 'nlweb-history-title';
+            title.textContent = conversation.title || 'Conversation';
+
+            const date = document.createElement('div');
+            date.className = 'nlweb-history-date';
+            date.textContent = this.formatTimestamp(conversation.timestamp);
+
+            summary.appendChild(title);
+            summary.appendChild(date);
+
+            const content = document.createElement('div');
+            content.className = 'nlweb-history-content';
+
+            const meta = document.createElement('p');
+            meta.className = 'nlweb-history-meta';
+            const messageCount = Array.isArray(conversation.messages) ? conversation.messages.length : 0;
+            meta.textContent = `${messageCount} message${messageCount !== 1 ? 's' : ''}`;
+            content.appendChild(meta);
+
+            const preview = document.createElement('p');
+            preview.className = 'nlweb-history-preview';
+            preview.textContent = this.getConversationPreview(conversation);
+            content.appendChild(preview);
+
+            const loadBtn = document.createElement('button');
+            loadBtn.type = 'button';
+            loadBtn.className = 'nlweb-history-load secondary outline';
+            loadBtn.textContent = 'Load chat';
+            loadBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                this.loadConversation(conversation.id);
+            });
+            content.appendChild(loadBtn);
+
+            section.appendChild(summary);
+            section.appendChild(content);
+            section.addEventListener('toggle', () => {
+                if (!section.open) return;
+                list.querySelectorAll('.nlweb-history-section').forEach(otherSection => {
+                    if (otherSection !== section) {
+                        otherSection.open = false;
+                    }
+                });
+            });
+
+            list.appendChild(section);
+        });
+
+        historyPanel.appendChild(list);
+    }
+
+    getConversationPreview(conversation) {
+        if (!conversation || !Array.isArray(conversation.messages)) {
+            return 'No preview available.';
+        }
+
+        const firstUserMessage = conversation.messages.find(message =>
+            message.role === 'user' && message.content
+        );
+
+        if (!firstUserMessage) {
+            return 'No preview available.';
+        }
+
+        const preview = firstUserMessage.content.trim();
+        if (preview.length <= 140) {
+            return preview;
+        }
+
+        return `${preview.slice(0, 140).trim()}...`;
+    }
+
+    formatTimestamp(timestamp) {
+        if (!timestamp) return '';
+        try {
+            return new Date(timestamp).toLocaleString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            return '';
+        }
+    }
+
+    loadConversation(conversationId) {
+        const selectedConversation = this.conversations.find(conversation => conversation.id === conversationId);
+        if (!selectedConversation) return;
+
+        this.currentConversation = {
+            ...selectedConversation,
+            messages: Array.isArray(selectedConversation.messages) ? [...selectedConversation.messages] : []
+        };
+
+        this.renderConversationMessages(this.currentConversation);
+        this.hideHistoryPanel();
+        this.renderHistoryPanel();
     }
 
     loadConversations() {
         try {
             const stored = localStorage.getItem(this.storageKey);
-            return stored ? JSON.parse(stored) : [];
+            if (!stored) return [];
+
+            const parsed = JSON.parse(stored);
+            return Array.isArray(parsed) ? parsed : [];
         } catch (e) {
             console.error('Error loading conversations:', e);
             return [];
@@ -510,12 +787,8 @@ class NLWebChat {
 
     saveConversations() {
         try {
-            // Update or add current conversation
-            const index = this.conversations.findIndex(c => c.id === this.currentConversation.id);
-            if (index >= 0) {
-                this.conversations[index] = this.currentConversation;
-            } else {
-                this.conversations.unshift(this.currentConversation);
+            if (!this.currentConversation || this.currentConversation.messages.length === 0) {
+                return;
             }
 
             // Generate title from first message if still "New Conversation"
@@ -529,10 +802,16 @@ class NLWebChat {
                 }
             }
 
+            this.currentConversation.timestamp = Date.now();
+
+            const otherConversations = this.conversations.filter(c => c.id !== this.currentConversation.id);
+            this.conversations = [this.currentConversation, ...otherConversations];
+
             // Keep only last 50 conversations
             this.conversations = this.conversations.slice(0, 50);
 
             localStorage.setItem(this.storageKey, JSON.stringify(this.conversations));
+            this.renderHistoryPanel();
         } catch (e) {
             console.error('Error saving conversations:', e);
         }
