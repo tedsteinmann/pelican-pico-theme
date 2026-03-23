@@ -85,3 +85,45 @@ footer {
 .text-center {
     text-align: center;
 }
+
+.content-card-section {
+    margin: 2rem 0;
+}
+
+.content-card-section-header {
+    margin-bottom: 1rem;
+}
+
+.content-card-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.content-card {
+    height: 100%;
+}
+
+.content-card-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pico-muted-color);
+    margin-bottom: 0.75rem;
+}
+
+.content-card-title {
+    margin-bottom: 0.75rem;
+}
+
+.content-card-meta,
+.content-card-tags {
+    color: var(--pico-muted-color);
+    font-size: 0.9rem;
+}
+
+.content-card-cta {
+    margin-top: 1rem;
+    margin-bottom: 0;
+}

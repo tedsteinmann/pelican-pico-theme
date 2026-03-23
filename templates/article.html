@@ -19,7 +19,7 @@
     </address>
     {% endif %}
 
-    {{ article.content|safe }}
+    {{ render_inline_sections(article.content, article, CONTENT_SECTIONS)|safe }}
 
     {% if article.media %}
     <p>

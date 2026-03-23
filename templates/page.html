@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 
-<h2>{{ page.title }}</h2>
-
 {% block content %}
 <section>
-    {{ page.content }}
+    {{ render_inline_sections(page.content, page, CONTENT_SECTIONS)|safe }}
 </section>
 {% endblock %}

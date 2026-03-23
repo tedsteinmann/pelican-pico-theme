@@ -1,0 +1,42 @@
+<section class="content-card-section" id="{{ section.anchor or section.slug }}">
+    <header class="content-card-section-header">
+        {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+        {% if section.description %}<p>{{ section.description }}</p>{% endif %}
+    </header>
+
+    {% if section.cards %}
+    <div class="content-card-grid">
+        {% for card in section.cards %}
+        <article class="content-card">
+            {% if card.eyebrow %}<p class="content-card-eyebrow">{{ card.eyebrow }}</p>{% endif %}
+
+            <h3 class="content-card-title">
+                {% if card.url %}
+                <a href="{{ card.url }}" class="contrast">{{ card.title }}</a>
+                {% else %}
+                {{ card.title }}
+                {% endif %}
+            </h3>
+
+            {% if card.description %}<p>{{ card.description }}</p>{% endif %}
+
+            {% if card.meta %}<p class="content-card-meta">{{ card.meta }}</p>{% endif %}
+
+            {% if card.tags %}
+            <p class="content-card-tags">
+                {% for tag in card.tags %}
+                    <span>{{ tag }}</span>{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            {% endif %}
+
+            {% if card.url %}
+            <p class="content-card-cta">
+                <a href="{{ card.url }}">{{ card.cta_label or 'Learn more' }}</a>
+            </p>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
