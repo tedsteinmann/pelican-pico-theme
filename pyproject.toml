@@ -40,5 +40,8 @@ Documentation = "https://github.com/tedsteinmann/pelican-pico-theme#readme"
 [tool.setuptools]
 include-package-data = true
 
+[tool.setuptools.packages.find]
+include = ["pelican_pico_theme*"]
+
 [tool.setuptools.package-data]
 "*" = ["templates/**/*", "static/**/*"]
