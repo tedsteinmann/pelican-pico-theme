@@ -1,16 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% set homepage = HOMEPAGE %}
+{% set homepage_page = resolve_content_by_slug('home-source', pages, articles) %}
 {% set call_to_action = CALL_TO_ACTION %}
-{% set section = resolve_featured_section('service-areas', FEATURED_CONTENT, pages, articles) %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->
         <div>
-            <h1><strong>{{ homepage.title or SITENAME or AUTHOR }}</strong></h1>
-            {% if homepage.subtitle %}<h2 class="secondary">{{ homepage.subtitle }}</h2>{% endif %}
-            {% if homepage.summary %}<p>{{ homepage.summary }}</p>{% endif %}
+            <h1><strong>{{ homepage_page.title if homepage_page else (SITENAME or AUTHOR) }}</strong></h1>
+            {% if homepage_page and homepage_page.subtitle %}<h2 class="secondary">{{ homepage_page.subtitle }}</h2>{% endif %}
+            {% if homepage_page and homepage_page.summary %}<p>{{ homepage_page.summary|striptags }}</p>{% endif %}
 
             <!-- Call to Action Buttons -->
             {% if call_to_action %}
@@ -30,24 +29,24 @@
 
         <!-- Image Content -->
         <div class="homepage-image-wrap">
-            {% set portrait_image = homepage.image or SITE_IMAGE %}
+            {% set portrait_image = homepage_page.image if homepage_page and homepage_page.image else SITE_IMAGE %}
             {% if portrait_image %}
             <picture>
                 <source srcset="static/{{ portrait_image | replace('.webp', '-300.webp') }}" media="(max-width: 400px)" type="image/webp">
                 <source srcset="static/{{ portrait_image | replace('.webp', '-600.webp') }}" media="(max-width: 800px)" type="image/webp">
                 <source srcset="static/{{ portrait_image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
                 <img src="static/{{ portrait_image }}"
-                     alt="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
+                     alt="Portrait of {{ homepage_page.title if homepage_page else (SITENAME or AUTHOR) }}"
                      decoding="async"
                      fetchpriority="high"
-                     title="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
+                     title="Portrait of {{ homepage_page.title if homepage_page else (SITENAME or AUTHOR) }}"
                      class="radius responsive-image portrait-image homepage-portrait">
             </picture>
             {% endif %}
         </div>
     </div>
 
-    {% if section %}
-        {% include 'partials/card_section.html' %}
+    {% if homepage_page %}
+        {{ render_inline_sections(homepage_page.content, homepage_page, FEATURED_CONTENT, pages, articles)|safe }}
     {% endif %}
 {% endblock %}

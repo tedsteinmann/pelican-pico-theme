@@ -1,8 +1,13 @@
 <section class="content-card-section" id="{{ section.anchor or section.slug }}">
+    {% set render_section_title = show_section_title if show_section_title is defined else true %}
+    {% set render_section_description = show_section_description if show_section_description is defined else true %}
+    {% set has_section_header = (render_section_title and section.title) or (render_section_description and section.description) %}
+    {% if has_section_header %}
     <header class="content-card-section-header">
-        {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
-        {% if section.description %}<p>{{ section.description }}</p>{% endif %}
+        {% if render_section_title and section.title %}<h2>{{ section.title }}</h2>{% endif %}
+        {% if render_section_description and section.description %}<p>{{ section.description }}</p>{% endif %}
     </header>
+    {% endif %}
 
     {% if section.cards %}
     <div class="content-card-grid">

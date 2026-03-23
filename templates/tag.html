@@ -2,12 +2,21 @@
 
 {% block content %}
 
-{% set tag_name = tag.name|title|replace('-', ' ') if (tag is not string) else tag|title|replace('-', ' ') %}
+{% set raw_tag = tag.name if (tag is not string) else tag %}
+{% set tag_name = raw_tag|title|replace('-', ' ') %}
+{% set landing_content = resolve_content_by_slug(raw_tag, pages, articles) %}
 
   <header>
     <h2>{{ tag_name }}</h2>
   </header>
   <hr>
+
+  {% if landing_content %}
+  <section class="tag-landing-content">
+    {{ render_inline_sections(landing_content.content, landing_content, FEATURED_CONTENT, pages, articles)|safe }}
+  </section>
+  {% endif %}
+
   <ul class="article-list">
     {% for article in articles if tag in article.tags %}
       {% include "article_item.html" %}

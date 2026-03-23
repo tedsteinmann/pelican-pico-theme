@@ -3,7 +3,7 @@
     <div>
       <h4>Pages</h4>
       <ul>
-        {% for p in pages|sort(attribute='title') %}
+        {% for p in pages|sort(attribute='title') if not p.footer_exclude %}
           <li><a href="{{ SITEURL }}/{{ p.url }}">{{ p.title }}</a></li>
         {% endfor %}
       </ul>

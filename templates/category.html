@@ -14,6 +14,7 @@
 
   {% if featured_section %}
     {% set section = featured_section %}
+    {% set show_section_title = section.title|lower != category_title|lower %}
     {% include "partials/card_section.html" %}
   {% endif %}
 
