@@ -3,6 +3,7 @@
 {% block content %}
 {% set homepage = HOMEPAGE %}
 {% set call_to_action = CALL_TO_ACTION %}
+{% set section = CONTENT_SECTIONS.get('service-areas') %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->
@@ -45,4 +46,8 @@
             {% endif %}
         </div>
     </div>
+
+    {% if section %}
+        {% include 'partials/card_section.html' %}
+    {% endif %}
 {% endblock %}
