@@ -3,15 +3,29 @@
 {% block content %}
   {% set raw_category = category.name if (category is not string) else category %}
   {% set category_title = raw_category|replace('-', ' ')|title %}
+  {% set featured_section = resolve_featured_section(raw_category, FEATURED_CONTENT, pages, articles) %}
+  {% set featured_slugs = featured_section.referenced_slugs if featured_section else [] %}
 
   <header>
     <h2>{{ category_title }}</h2>
   </header>
   <hr>
 
+  {% if featured_section %}
+    {% set section = featured_section %}
+    {% include "partials/card_section.html" %}
+  {% endif %}
+
+  {% set category_articles = [] %}
+  {% for article in articles if article.category == category and article.slug not in featured_slugs %}
+      {% set _ = category_articles.append(article) %}
+  {% endfor %}
+
+  {% if category_articles %}
   <ul class="article-list">
-    {% for article in articles if article.category == category %}
+    {% for article in category_articles %}
         {% include "article_item.html" %}
     {% endfor %}
   </ul>
+  {% endif %}
 {% endblock %}

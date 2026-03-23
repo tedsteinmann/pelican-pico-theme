@@ -3,7 +3,7 @@
 {% block content %}
 {% set homepage = HOMEPAGE %}
 {% set call_to_action = CALL_TO_ACTION %}
-{% set section = CONTENT_SECTIONS.get('service-areas') %}
+{% set section = resolve_featured_section('service-areas', FEATURED_CONTENT, pages, articles) %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->

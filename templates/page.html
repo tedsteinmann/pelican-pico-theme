@@ -2,6 +2,6 @@
 
 {% block content %}
 <section>
-    {{ render_inline_sections(page.content, page, CONTENT_SECTIONS)|safe }}
+    {{ render_inline_sections(page.content, page, FEATURED_CONTENT, pages, articles)|safe }}
 </section>
 {% endblock %}
