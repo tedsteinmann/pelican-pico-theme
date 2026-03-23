@@ -1,22 +1,19 @@
 <li>
-    {% set capability_area_slugs = FEATURED_CONTENT.get('service-areas', {}).get('references', []) %}
-    {% set article_category_slug = article.category.name|lower if article.category else None %}
     <h3>
         <a href="/{{ article.url }}" class="contrast">{{ article.title }}</a>
     </h3>
     <blockquote>{{ article.summary }}
-    {% if article_category_slug in capability_area_slugs %}
-    <strong>Capability Area:</strong> 
-    <a href="/tag/{{ article_category_slug }}.html">{{ article.category }}</a>
-    {% else %}
+    {% if article.category %}
     <strong>Category:</strong> 
     <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
     {% endif %}
     <br>
+    {% if article.tags %}
     <strong>Tags:</strong> 
     {% for tag in article.tags %}
         <a href="/{{ tag.url }}">{{ tag }}</a>{% if not loop.last %}, {% endif %}
     {% endfor %}
+    {% endif %}
     <br>
     <small>Published on {{ article.date.strftime("%B %d, %Y") }}</small>
     </blockquote>

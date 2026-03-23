@@ -29,15 +29,9 @@
     {% endif %}
 
     <hr>
-    {% set capability_area_slugs = FEATURED_CONTENT.get('service-areas', {}).get('references', []) %}
-    {% set article_category_slug = article.category.name|lower if article.category else None %}
     {% if article.category %}
     <p>
-      {% if article_category_slug in capability_area_slugs %}
-      Capability Area: <a href="/tag/{{ article_category_slug }}.html">{{ article.category }}</a>
-      {% else %}
       Category: <a href="/{{ article.category.url }}">{{ article.category }}</a>
-      {% endif %}
     </p>
     {% endif %}
     
