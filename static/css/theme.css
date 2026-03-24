@@ -102,6 +102,8 @@ footer {
 
 .content-card {
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .content-card-eyebrow {
@@ -124,6 +126,7 @@ footer {
 }
 
 .content-card-cta {
-    margin-top: 1rem;
+    margin-top: auto;
     margin-bottom: 0;
+    text-align: right;
 }

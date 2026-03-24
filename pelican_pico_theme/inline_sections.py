@@ -1,6 +1,9 @@
 import html
 import re
 from copy import deepcopy
+from pathlib import Path
+
+import yaml
 
 
 INLINE_SECTION_TOKEN_RE = re.compile(
@@ -54,7 +57,7 @@ def _build_content_lookup(pages=None, articles=None):
     return lookup
 
 
-def _build_featured_card(reference, lookup, cta_label):
+def _build_featured_card(reference, lookup):
     content = lookup.get(reference)
     if content:
         return {
@@ -62,7 +65,6 @@ def _build_featured_card(reference, lookup, cta_label):
             "title": content.title,
             "url": _content_url(content),
             "description": _content_summary(content),
-            "cta_label": cta_label,
         }
 
     if ":" not in reference:
@@ -83,7 +85,6 @@ def _build_featured_card(reference, lookup, cta_label):
             "title": title,
             "url": f"/tag/{slug}.html",
             "description": description,
-            "cta_label": cta_label,
         }
 
     if reference_type == "category":
@@ -92,10 +93,51 @@ def _build_featured_card(reference, lookup, cta_label):
             "title": title,
             "url": f"/category/{slug}.html",
             "description": description,
-            "cta_label": cta_label,
         }
 
     return None
+
+
+def _parse_front_matter(text):
+    if not text.startswith("---\n"):
+        return {}
+
+    parts = text.split("---\n", 2)
+    if len(parts) < 3:
+        return {}
+
+    return yaml.safe_load(parts[1]) or {}
+
+
+def load_featured_sections(content_root, folder_name):
+    sections = {}
+    if not content_root or not folder_name:
+        return sections
+
+    featured_dir = Path(content_root) / folder_name
+    if not featured_dir.exists():
+        return sections
+
+    for path in sorted(featured_dir.glob("*.md")):
+        metadata = _parse_front_matter(path.read_text(encoding="utf-8"))
+        slug = metadata.get("slug")
+        if not slug:
+            continue
+
+        cards = metadata.get("cards", [])
+        if isinstance(cards, str):
+            cards = [cards]
+
+        sections[slug] = {
+            "slug": slug,
+            "anchor": slug,
+            "title": metadata.get("title", ""),
+            "description": metadata.get("description", ""),
+            "cards": cards,
+            "body_slug": metadata.get("body_slug"),
+        }
+
+    return sections
 
 
 def resolve_content_by_slug(slug, pages=None, articles=None):
@@ -127,12 +169,8 @@ def resolve_featured_section(
     lookup = _build_content_lookup(pages, articles)
     cards = []
     referenced_slugs = []
-    for reference_slug in rendered_section.get("references", []):
-        card = _build_featured_card(
-            reference_slug,
-            lookup,
-            rendered_section.get("cta_label", "Read more"),
-        )
+    for reference_slug in rendered_section.get("cards", []):
+        card = _build_featured_card(reference_slug, lookup)
         if not card:
             continue
 
@@ -217,10 +255,9 @@ def _render_card(card):
         parts.append(f'<p class="content-card-tags">{tag_text}</p>')
 
     if url:
-        cta_label = html.escape(card.get("cta_label", "Learn more"))
         parts.append(
             '<p class="content-card-cta">'
-            f'<a href="{html.escape(url, quote=True)}">{cta_label}</a>'
+            f'<a href="{html.escape(url, quote=True)}">More</a>'
             '</p>'
         )
 

@@ -1,4 +1,5 @@
 from .inline_sections import (
+    load_featured_sections,
     render_inline_sections,
     resolve_content_by_slug,
     resolve_featured_section,
