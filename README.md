@@ -48,7 +48,7 @@ homepage:
   image: static/portrait.webp
 
 seo:
-  og_image: static/og-image.jpg
+  og_image: og-image.jpg
   twitter_username: yourhandle
 
 social:
