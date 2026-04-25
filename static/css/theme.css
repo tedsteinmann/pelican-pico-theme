@@ -85,3 +85,43 @@ footer {
 .text-center {
     text-align: center;
 }
+
+.content-card-section {
+    margin: 2rem 0;
+}
+
+.content-card-section-header {
+    margin-bottom: 1rem;
+}
+
+.content-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.content-card {
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
+    box-shadow: var(--card-box-shadow);
+    height: 100%;
+    padding: 1rem;
+}
+
+.content-card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.content-card-title a {
+    color: inherit;
+}
+
+.content-card-description > :first-child {
+    margin-top: 0;
+}
+
+.content-card-description > :last-child {
+    margin-bottom: 0;
+}

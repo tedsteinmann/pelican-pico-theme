@@ -1,0 +1,21 @@
+<section class="content-card-section" id="{{ section.slug }}">
+  {% if section.title %}
+  <header class="content-card-section-header">
+    <h2>{{ section.title }}</h2>
+  </header>
+  {% endif %}
+
+  <div class="content-grid">
+    {% for card in section.cards %}
+    <article class="content-card">
+      <h3 class="content-card-title">
+        <a href="/{{ card.url.lstrip('/') }}">{{ card.title }}</a>
+      </h3>
+
+      {% if card.description %}
+      <div class="content-card-description">{{ card.description }}</div>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>

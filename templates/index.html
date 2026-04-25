@@ -1,15 +1,78 @@
 {% extends "base.html" %}
 
+{% set homepage_source = (pages | selectattr('slug', 'equalto', 'home-source') | list | first) %}
+
+{% block head %}
+    <title>{{ homepage_source.title if homepage_source else SITENAME }} | {{ AUTHOR }}</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Pelican" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="{{ AUTHOR }}" />
+    <meta name="theme-color" content="#11191f">
+    {% set _raw_meta = homepage_source.summary if homepage_source and homepage_source.summary else DESCRIPTION %}
+    {% set meta_description = _raw_meta|striptags|truncate(160) %}
+    {% set meta_description_long = (homepage_source.description if homepage_source and homepage_source.description else _raw_meta)|striptags|truncate(200) %}
+
+    <meta name="description" content="{{ meta_description }}" />
+    {% if homepage_source and homepage_source.keywords %}
+    <meta name="keywords" content="{{ homepage_source.keywords }}" />
+    {% endif %}
+    {% if homepage_source and homepage_source.summary %}
+    <meta name="summary" content="{{ meta_description_long }}" />
+    {% endif %}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ homepage_source.title if homepage_source else SITENAME }}" />
+    <meta property="og:description" content="{{ meta_description_long }}" />
+    <meta property="og:url" content="{{ SITEURL }}/" />
+
+    {% if homepage_source and homepage_source.image %}
+    <meta property="og:image" content="{{ SITEURL }}/static/{{ homepage_source.image }}" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {% elif SEO.og_image %}
+    <meta property="og:image" content="{{ SITEURL }}/static/{{ SEO.og_image }}" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {% endif %}
+
+    {% if SEO.twitter_username %}
+    <meta name="twitter:creator" content="@{{ SEO.twitter_username }}" />
+    {% endif %}
+    <meta name="twitter:title" content="{{ homepage_source.title if homepage_source else SITENAME }}" />
+    <meta name="twitter:description" content="{{ meta_description_long }}" />
+
+    {% if homepage_source and homepage_source.image %}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="{{ SITEURL }}/static/{{ homepage_source.image }}" />
+    {% elif SEO.og_image %}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="{{ SITEURL }}/static/{{ SEO.og_image }}" />
+    {% else %}
+    <meta name="twitter:card" content="summary" />
+    {% endif %}
+
+    <link rel="icon" type="image/x-icon" href="/theme/images/favicon.ico">
+    <link rel="preload" href="/theme/css/pico.min.css" as="style">
+    <link rel="stylesheet" href="/theme/css/pico.min.css">
+    <link rel="stylesheet" href="/theme/css/theme.css">
+    {% if NLWEB_CHAT_ENABLED %}
+    <link rel="stylesheet" href="/theme/css/nlweb-chat.css">
+    {% endif %}
+{% endblock head %}
+
 {% block content %}
-{% set homepage = HOMEPAGE %}
 {% set call_to_action = CALL_TO_ACTION %}
     <!-- Grid Layout -->
     <div class="grid">
         <!-- Text Content -->
         <div>
-            <h1><strong>{{ homepage.title or SITENAME or AUTHOR }}</strong></h1>
-            {% if homepage.subtitle %}<h2 class="secondary">{{ homepage.subtitle }}</h2>{% endif %}
-            {% if homepage.summary %}<p>{{ homepage.summary }}</p>{% endif %}
+            <h1><strong>{{ homepage_source.title if homepage_source else SITENAME or AUTHOR }}</strong></h1>
+            {% if homepage_source and homepage_source.subtitle %}<h2 class="secondary">{{ homepage_source.subtitle }}</h2>{% endif %}
+            {% if homepage_source and homepage_source.summary %}<p>{{ homepage_source.summary|striptags }}</p>{% endif %}
+            {% if homepage_source and homepage_source.description %}<p class="secondary">{{ homepage_source.description }}</p>{% endif %}
 
             <!-- Call to Action Buttons -->
             {% if call_to_action %}
@@ -25,24 +88,31 @@
                 <p class="secondary">BETA Natural Language search.</p>
                 {% include 'nlweb_chat.html' %}
             </div>
+
         </div>
 
         <!-- Image Content -->
         <div class="homepage-image-wrap">
-            {% set portrait_image = homepage.image or SITE_IMAGE %}
+            {% set portrait_image = homepage_source.image if homepage_source and homepage_source.image else SITE_IMAGE %}
             {% if portrait_image %}
             <picture>
                 <source srcset="static/{{ portrait_image | replace('.webp', '-300.webp') }}" media="(max-width: 400px)" type="image/webp">
                 <source srcset="static/{{ portrait_image | replace('.webp', '-600.webp') }}" media="(max-width: 800px)" type="image/webp">
                 <source srcset="static/{{ portrait_image | replace('.webp', '-1200.webp') }}" media="(max-width: 1200px)" type="image/webp">
                 <img src="static/{{ portrait_image }}"
-                     alt="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
+                     alt="Portrait of {{ homepage_source.title if homepage_source else SITENAME or AUTHOR }}"
                      decoding="async"
                      fetchpriority="high"
-                     title="Portrait of {{ homepage.title or SITENAME or AUTHOR }}"
+                     title="Portrait of {{ homepage_source.title if homepage_source else SITENAME or AUTHOR }}"
                      class="radius responsive-image portrait-image homepage-portrait">
             </picture>
             {% endif %}
         </div>
     </div>
+
+    {% if homepage_source and homepage_source.content %}
+    <section class="homepage-source-content">
+        {{ homepage_source.content }}
+    </section>
+    {% endif %}
 {% endblock %}
