@@ -36,7 +36,7 @@ PAGE_PATHS = ['pages']
 ARTICLE_PATHS = ['articles']
 ```
 
-Optional site metadata can be provided from `site.yml` (see `site.yml.template`), or set directly in config.
+Optional site metadata can be provided from `site.yml` (see `site.yml.template` for a complete example), or set directly in config.
 
 ## Local Theme Testing (Pelican-friendly workflow)
 
@@ -59,7 +59,7 @@ pelican demo/content -s demo/pelicanconf.py -o demo/output
 ### 3) Run a local dev server
 
 ```bash
-pelican --listen -o demo/output
+pelican demo/content -s demo/pelicanconf.py -o demo/output --listen
 ```
 
 Then open `http://localhost:8000`.
