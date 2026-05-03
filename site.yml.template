@@ -1,0 +1,18 @@
+site:
+  title: My Site
+  author: Your Name
+  url: https://example.com
+  description: A short description of this site.
+  image: images/site-image.jpg   # path under static/
+
+seo:
+  og_image: images/og-image.jpg  # path under static/
+  twitter_username: yourhandle   # without the @
+
+call_to_action:
+  - name: GitHub
+    url: https://github.com/
+    button_class: secondary
+  - name: Contact
+    url: /pages/contact.html
+    button_class: primary

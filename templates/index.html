@@ -58,9 +58,6 @@
     <link rel="preload" href="/theme/css/pico.min.css" as="style">
     <link rel="stylesheet" href="/theme/css/pico.min.css">
     <link rel="stylesheet" href="/theme/css/theme.css">
-    {% if NLWEB_CHAT_ENABLED %}
-    <link rel="stylesheet" href="/theme/css/nlweb-chat.css">
-    {% endif %}
 {% endblock head %}
 
 {% block content %}
@@ -81,13 +78,6 @@
                     {% set button_class = call_to_action_item.button_class or 'secondary' %}
                     <a href="{{ call_to_action_item.url }}" role="button" class="{{ button_class }}" target="_blank" rel="noopener">{{ call_to_action_item.name }}</a>
                 {% endfor %}
-            </div>
-            {% endif %}
-            {% if NLWEB_CHAT_ENABLED %}
-            <div class="mt-1">
-                <h3 class="secondary">Search this site</h3>
-                <p class="secondary">BETA Natural Language search.</p>
-                {% include 'nlweb_chat.html' %}
             </div>
             {% endif %}
 

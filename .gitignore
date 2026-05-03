@@ -148,3 +148,6 @@ Thumbs.db
 output/
 cache/
 *.pid
+
+# Demo build output
+demo/output/
